@@ -1,6 +1,6 @@
 # VuforiaWebService
 
-VuforiaWebService
+Code Sample
 
         private static void Main()
         {
