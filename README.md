@@ -1,8 +1,6 @@
 # VuforiaWebService
 VuforiaWebService
 
-public class Program
-{
     private static void Main()
     {
         TargetListResource resource = new TargetListResource(GetService());
@@ -30,4 +28,3 @@ public class Program
     {
         return new DatabaseAccessKeys("ACCESS_KEY", "SECRET_KEY");
     }
-}
