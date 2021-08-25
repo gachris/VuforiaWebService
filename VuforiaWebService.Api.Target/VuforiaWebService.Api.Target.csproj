@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>gachris</Authors>
+    <PackageProjectUrl>https://github.com/gachris/VuforiaWebService/tree/master/VuforiaWebService.Api.Target</PackageProjectUrl>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>VuforiaWebService.Api.Target_SignAssembly_Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VuforiaWebService.Api.Auth\VuforiaWebService.Api.Auth.csproj" />
+  </ItemGroup>
+
+</Project>
