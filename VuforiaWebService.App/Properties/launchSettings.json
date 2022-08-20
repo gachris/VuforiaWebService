@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "VuforiaPortal.Sync.App.netcoreapp3.1": {
+    "VuforiaWebService.App": {
       "commandName": "Project"
     }
   }
