@@ -1,17 +1,16 @@
 ﻿using System.Net.Http;
 
-namespace VuforiaWebService.Api.Core.Services
-{
-    public class ConfigurableHttpClient : HttpClient
-    {
-        /// <summary>Gets the configurable message handler.</summary>
-        public ConfigurableMessageHandler MessageHandler { get; private set; }
+namespace VuforiaWebService.Api.Core.Services;
 
-        /// <summary>Constructs a new HTTP client.</summary>
-        public ConfigurableHttpClient(ConfigurableMessageHandler handler) : base((HttpMessageHandler)handler)
-        {
-            this.MessageHandler = handler;
-            this.DefaultRequestHeaders.ExpectContinue = (new bool?(false));
-        }
+public class ConfigurableHttpClient : HttpClient
+{
+    /// <summary>Gets the configurable message handler.</summary>
+    public ConfigurableMessageHandler MessageHandler { get; private set; }
+
+    /// <summary>Constructs a new HTTP client.</summary>
+    public ConfigurableHttpClient(ConfigurableMessageHandler handler) : base((HttpMessageHandler)handler)
+    {
+        MessageHandler = handler;
+        DefaultRequestHeaders.ExpectContinue = (new bool?(false));
     }
 }

@@ -1,21 +1,20 @@
 ﻿using Newtonsoft.Json;
 using VuforiaWebService.Api.Core.Types;
 
-namespace VuforiaWebService.Api.Target.Types
+namespace VuforiaWebService.Api.Target.Types;
+
+public class VuforiaRetrieveResponse : VuforiaBaseResponse
 {
-    public class VuforiaRetrieveResponse : VuforiaBaseResponse
+    [JsonProperty("target_record")]
+    public TargetRecordModel TargetRecord { get; set; }
+
+    [JsonProperty("status")]
+    public StatusEnum Status { get; set; }
+
+    public enum StatusEnum
     {
-        [JsonProperty("target_record")]
-        public TargetRecordModel TargetRecord { get; set; }
-
-        [JsonProperty("status")]
-        public StatusEnum Status { get; set; }
-
-        public enum StatusEnum
-        {
-            Processing,
-            Success,
-            Failed
-        }
+        Processing,
+        Success,
+        Failed
     }
 }

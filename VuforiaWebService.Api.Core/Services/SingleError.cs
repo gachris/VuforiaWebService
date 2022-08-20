@@ -1,26 +1,25 @@
-﻿namespace VuforiaWebService.Api.Core.Services
+﻿namespace VuforiaWebService.Api.Core.Services;
+
+/// <summary>A single server error</summary>
+public class SingleError
 {
-    /// <summary>A single server error</summary>
-    public class SingleError
+    /// <summary>The domain in which the error occured</summary>
+    public string Domain { get; set; }
+
+    /// <summary>The reason the error was thrown</summary>
+    public string Reason { get; set; }
+
+    /// <summary>The error message</summary>
+    public string Message { get; set; }
+
+    /// <summary>Type of the location</summary>
+    public string LocationType { get; set; }
+
+    /// <summary>Location where the error was thrown</summary>
+    public string Location { get; set; }
+
+    public override string ToString()
     {
-        /// <summary>The domain in which the error occured</summary>
-        public string Domain { get; set; }
-
-        /// <summary>The reason the error was thrown</summary>
-        public string Reason { get; set; }
-
-        /// <summary>The error message</summary>
-        public string Message { get; set; }
-
-        /// <summary>Type of the location</summary>
-        public string LocationType { get; set; }
-
-        /// <summary>Location where the error was thrown</summary>
-        public string Location { get; set; }
-
-        public override string ToString()
-        {
-            return string.Format("Message[{0}] Location[{1} - {2}] Reason[{3}] Domain[{4}]", Message, Location, LocationType, Reason, Domain);
-        }
+        return string.Format("Message[{0}] Location[{1} - {2}] Reason[{3}] Domain[{4}]", Message, Location, LocationType, Reason, Domain);
     }
 }

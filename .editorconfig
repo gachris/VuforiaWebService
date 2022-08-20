@@ -1,0 +1,6 @@
+﻿[*.cs]
+
+# IDE0027: Use expression body for accessors
+csharp_style_expression_bodied_accessors = false
+
+csharp_style_namespace_declarations = file_scoped:warning

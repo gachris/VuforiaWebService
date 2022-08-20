@@ -1,6 +1,5 @@
-﻿namespace VuforiaWebService.Api.Core.Types
+﻿namespace VuforiaWebService.Api.Core.Types;
+
+public class VuforiaErrorResponse : VuforiaBaseResponse
 {
-    public class VuforiaErrorResponse : VuforiaBaseResponse
-    {
-    }
 }

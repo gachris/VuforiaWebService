@@ -1,6 +1,5 @@
-﻿namespace VuforiaWebService.Api.Core.Services
+﻿namespace VuforiaWebService.Api.Core.Services;
+
+public interface IJsonSerializer : ISerializer
 {
-    public interface IJsonSerializer : ISerializer
-    {
-    }
 }
