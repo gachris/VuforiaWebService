@@ -4,7 +4,7 @@ using VuforiaWebService.Api.Core.Services;
 using VuforiaWebService.Api.Core.Types;
 using VuforiaWebService.Api.Target;
 
-namespace VuforiaWebService.App.netcoreapp3_1
+namespace VuforiaWebService.App
 {
     internal class Program
     {

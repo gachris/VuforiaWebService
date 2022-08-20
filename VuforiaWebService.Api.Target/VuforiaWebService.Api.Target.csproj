@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>gachris</Authors>
@@ -12,11 +12,11 @@
     <PackageIcon>vuforia.logo.png</PackageIcon>
     <PackageIconUrl />
     <Description>The Vuforia Web Services (VWS) API is a RESTful web API that enables developers to use their own Content Management System (CMS) with Vuforia’s Cloud Recognition service and VuMark Generation API</Description>
-    <Copyright>Copyright © gachris 2021.</Copyright>
-    <AssemblyVersion>1.0.0.1</AssemblyVersion>
-    <FileVersion>1.0.0.1</FileVersion>
+    <Copyright>Copyright © gachris 2022.</Copyright>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
     <RepositoryType>git</RepositoryType>
-    <Version>1.0.1</Version>
+    <Version>2.0.0</Version>
     <NeutralLanguage>en-150</NeutralLanguage>
     <PackageTags>vuforia, web service, unity</PackageTags>
   </PropertyGroup>
