@@ -1,8 +1,9 @@
 ﻿using System.Net;
 using VuforiaWebService.Api.Auth;
-using VuforiaWebService.Api.Core.Services;
+using VuforiaWebService.Api.Core;
 using VuforiaWebService.Api.Core.Types;
-using VuforiaWebService.Api.Target;
+using VuforiaWebService.Api.Target.Resources;
+using VuforiaWebService.Api.Target.Services;
 
 namespace VuforiaWebService.App;
 
@@ -31,8 +32,5 @@ internal class Program
         });
     }
 
-    private static DatabaseAccessKeys GetKeys()
-    {
-        return new DatabaseAccessKeys("ACCESS_KEY", "SECRET_KEY");
-    }
+    private static DatabaseAccessKeys GetKeys() => new DatabaseAccessKeys("ACCESS_KEY", "SECRET_KEY");
 }

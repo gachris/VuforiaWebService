@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VuforiaWebService.Api.Core.Services;
+namespace VuforiaWebService.Api.Core.Types;
 
 [Flags]
 public enum ExponentialBackOffPolicy

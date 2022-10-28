@@ -1,4 +1,4 @@
-﻿namespace VuforiaWebService.Api.Core.Services;
+﻿namespace VuforiaWebService.Api.Core.Types;
 
 /// <summary>Describe the type of this parameter (Path or Query).</summary>
 public enum RequestParameterType

@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
-using VuforiaWebService.Api.Core.Services;
+using VuforiaWebService.Api.Core;
+using VuforiaWebService.Api.Target.Resources;
 
-namespace VuforiaWebService.Api.Target;
+namespace VuforiaWebService.Api.Target.Services;
 
 public class TargetService : BaseClientService
 {
     public const string Version = "v1";
 
-    public TargetService(Initializer initializer) : base(initializer)
-    {
-        TargetList = new TargetListResource(this);
-    }
+    public TargetService(Initializer initializer) : base(initializer) => TargetList = new TargetListResource(this);
 
     public override string Name => "target";
 

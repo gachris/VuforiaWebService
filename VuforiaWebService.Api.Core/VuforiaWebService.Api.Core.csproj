@@ -1,35 +1,48 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Authors>gachris</Authors>
-    <PackageProjectUrl>https://github.com/gachris/VuforiaWebService/</PackageProjectUrl>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>VuforiaWebService.Api.Core_SignAssembly_Key.snk</AssemblyOriginatorKeyFile>
-    <PackageIcon>vuforia.logo.png</PackageIcon>
-    <PackageIconUrl />
-    <Description>The Vuforia Web Services (VWS) API is a RESTful web API that enables developers to use their own Content Management System (CMS) with Vuforia’s Cloud Recognition service and VuMark Generation API</Description>
-    <Copyright>Copyright © gachris 2022.</Copyright>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/gachris/VuforiaWebService/</RepositoryUrl>
-    <Version>2.0.0</Version>
-    <PackageTags>vuforia, web service, unity</PackageTags>
-    <NeutralLanguage>en-150</NeutralLanguage>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0;net6.0;net7.0</TargetFrameworks>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Authors>gachris</Authors>
+		<PackageProjectUrl>https://github.com/gachris/VuforiaWebService/</PackageProjectUrl>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>VuforiaWebService.Api.Core_SignAssembly_Key.snk</AssemblyOriginatorKeyFile>
+		<PackageIcon>vuforia.logo.png</PackageIcon>
+		<PackageIconUrl />
+		<Description>The Vuforia Web Services (VWS) API is a RESTful web API that enables developers to use their own Content Management System (CMS) with Vuforia’s Cloud Recognition service and VuMark Generation API</Description>
+		<Copyright>Copyright © gachris 2022.</Copyright>
+		<AssemblyVersion>2.0.0.0</AssemblyVersion>
+		<FileVersion>2.0.0.0</FileVersion>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/gachris/VuforiaWebService/</RepositoryUrl>
+		<Version>2.0.0</Version>
+		<PackageTags>vuforia, web service, unity</PackageTags>
+		<NeutralLanguage>en-150</NeutralLanguage>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+		<DefineConstants>netcoreapp3_1</DefineConstants>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\vuforia.logo.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+		<DefineConstants>netstandard2_1</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="VuforiaWebService.Api.Core_SignAssembly_Key.snk" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\vuforia.logo.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
 </Project>

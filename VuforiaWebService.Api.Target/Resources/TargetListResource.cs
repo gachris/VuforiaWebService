@@ -1,10 +1,10 @@
-﻿using VuforiaWebService.Api.Core.Services;
+﻿using VuforiaWebService.Api.Core;
 using VuforiaWebService.Api.Core.Types;
 using VuforiaWebService.Api.Core.Util;
-using VuforiaWebService.Api.Target.Request;
+using VuforiaWebService.Api.Target.Requests;
 using VuforiaWebService.Api.Target.Types;
 
-namespace VuforiaWebService.Api.Target;
+namespace VuforiaWebService.Api.Target.Resources;
 
 /// <summary>The "calendarList" collection of methods.</summary>
 public class TargetListResource
@@ -15,71 +15,41 @@ public class TargetListResource
     private readonly IClientService _service;
 
     /// <summary>Constructs a new resource.</summary>
-    public TargetListResource(IClientService service)
-    {
-        _service = service;
-    }
+    public TargetListResource(IClientService service) => _service = service;
 
     /// <summary>Removes a target from the user's target list.</summary>
     /// <param name="targetId">target identifier. To retrieve target IDs call the targetList.list method. If you
     /// want to access the primary target of the currently logged in user, use the "primary" keyword.</param>
-    public virtual DeleteRequest Delete(DatabaseAccessKeys keys, string targetId)
-    {
-        return new DeleteRequest(_service, keys, targetId);
-    }
+    public virtual DeleteRequest Delete(DatabaseAccessKeys keys, string targetId) => new DeleteRequest(_service, keys, targetId);
 
     /// <summary>Returns a target from the user's target list.</summary>
     /// <param name="targetId">target identifier. To retrieve target IDs call the targetList.list method. If you
     /// want to access the primary target of the currently logged in user, use the "primary" keyword.</param>
-    public virtual GetRequest Get(DatabaseAccessKeys keys, string targetId)
-    {
-        return new GetRequest(_service, keys, targetId);
-    }
+    public virtual GetRequest Get(DatabaseAccessKeys keys, string targetId) => new GetRequest(_service, keys, targetId);
 
     /// <summary>Inserts an existing target into the user's target list.</summary>
     /// <param name="body">The body of the request.</param>
-    public virtual InsertRequest Insert(DatabaseAccessKeys keys, PostTrackableRequest body)
-    {
-        return new InsertRequest(_service, keys, body);
-    }
+    public virtual InsertRequest Insert(DatabaseAccessKeys keys, PostTrackableRequest body) => new InsertRequest(_service, keys, body);
 
     /// <summary>Returns the targets on the user's targets list.</summary>
-    public virtual ListRequest List(DatabaseAccessKeys keys)
-    {
-        return new ListRequest(_service, keys);
-    }
+    public virtual ListRequest List(DatabaseAccessKeys keys) => new ListRequest(_service, keys);
 
     /// <summary>Updates an existing target on the user's target list.</summary>
     /// <param name="body">The body of the request.</param>
     /// <param name="targetId">Target identifier. To retrieve target IDs call the targetList.list method. If you
     /// want to access the primary target of the currently logged in user, use the "primary" keyword.</param>
-    public virtual UpdateRequest Update(DatabaseAccessKeys keys, PostTrackableRequest body, string targetId)
-    {
-        return new UpdateRequest(_service, keys, body, targetId);
-    }
+    public virtual UpdateRequest Update(DatabaseAccessKeys keys, PostTrackableRequest body, string targetId) => new UpdateRequest(_service, keys, body, targetId);
 
-    public virtual CheckSimilarRequest CheckSimilar(DatabaseAccessKeys keys, string targetId)
-    {
-        return new CheckSimilarRequest(_service, keys, targetId);
-    }
+    public virtual CheckSimilarRequest CheckSimilar(DatabaseAccessKeys keys, string targetId) => new CheckSimilarRequest(_service, keys, targetId);
 
-    public virtual RetrieveTargetSummaryReportRequest RetrieveTargetSummaryReport(DatabaseAccessKeys keys, string targetId)
-    {
-        return new RetrieveTargetSummaryReportRequest(_service, keys, targetId);
-    }
+    public virtual RetrieveTargetSummaryReportRequest RetrieveTargetSummaryReport(DatabaseAccessKeys keys, string targetId) => new RetrieveTargetSummaryReportRequest(_service, keys, targetId);
 
-    public virtual GetDatabaseSummaryReportRequest GetDatabaseSummaryReport(DatabaseAccessKeys keys)
-    {
-        return new GetDatabaseSummaryReportRequest(_service, keys);
-    }
+    public virtual GetDatabaseSummaryReportRequest GetDatabaseSummaryReport(DatabaseAccessKeys keys) => new GetDatabaseSummaryReportRequest(_service, keys);
 
     public class GetDatabaseSummaryReportRequest : TargetBaseServiceRequest<VuforiaGetDatabaseSummaryReportResponse>
     {
         /// <summary>Constructs a new Delete request.</summary>
-        public GetDatabaseSummaryReportRequest(IClientService service, DatabaseAccessKeys keys) : base(service, keys)
-        {
-            InitParameters();
-        }
+        public GetDatabaseSummaryReportRequest(IClientService service, DatabaseAccessKeys keys) : base(service, keys) => InitParameters();
 
         ///<summary>Gets the method name.</summary>
         public override string MethodName => "summary";
@@ -91,10 +61,7 @@ public class TargetListResource
         public override string RestPath => "/summary";
 
         /// <summary>Initializes Delete parameter list.</summary>
-        protected override void InitParameters()
-        {
-            base.InitParameters();
-        }
+        protected override void InitParameters() => base.InitParameters();
     }
 
     public class RetrieveTargetSummaryReportRequest : TargetBaseServiceRequest<VuforiaRetrieveTargetSummaryReportResponse>
@@ -284,20 +251,14 @@ public class TargetListResource
         public override string RestPath => "/targets";
 
         /// <summary>Initializes Insert parameter list.</summary>
-        protected override void InitParameters()
-        {
-            base.InitParameters();
-        }
+        protected override void InitParameters() => base.InitParameters();
     }
 
     /// <summary>Returns the calendars on the user's calendar list.</summary>
     public class ListRequest : TargetBaseServiceRequest<VuforiaGetAllResponse>
     {
         /// <summary>Constructs a new List request.</summary>
-        public ListRequest(IClientService service, DatabaseAccessKeys keys) : base(service, keys)
-        {
-            InitParameters();
-        }
+        public ListRequest(IClientService service, DatabaseAccessKeys keys) : base(service, keys) => InitParameters();
 
         ///<summary>Gets the method name.</summary>
         public override string MethodName => "list";
@@ -309,10 +270,7 @@ public class TargetListResource
         public override string RestPath => "/targets";
 
         /// <summary>Initializes List parameter list.</summary>
-        protected override void InitParameters()
-        {
-            base.InitParameters();
-        }
+        protected override void InitParameters() => base.InitParameters();
     }
 
     /// <summary>Updates an existing target on the user's target list.</summary>

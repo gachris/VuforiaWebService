@@ -1,7 +1,7 @@
-﻿using VuforiaWebService.Api.Core.Services;
+﻿using VuforiaWebService.Api.Core;
 using VuforiaWebService.Api.Core.Types;
 
-namespace VuforiaWebService.Api.Target.Request;
+namespace VuforiaWebService.Api.Target.Requests;
 
 public abstract class TargetBaseServiceRequest<TResponse> : ClientServiceRequest<TResponse>
 {
@@ -11,8 +11,5 @@ public abstract class TargetBaseServiceRequest<TResponse> : ClientServiceRequest
     }
 
     /// <summary>Initializes Target parameter list.</summary>
-    protected override void InitParameters()
-    {
-        base.InitParameters();
-    }
+    protected override void InitParameters() => base.InitParameters();
 }
