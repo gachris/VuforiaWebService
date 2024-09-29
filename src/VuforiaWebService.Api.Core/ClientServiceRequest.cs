@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using VuforiaWebService.Api.Core.Types;
+﻿using VuforiaWebService.Api.Core.Types;
 
 namespace VuforiaWebService.Api.Core;
 
@@ -23,16 +17,22 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
 
     /// <summary>The Database Access Keys.</summary>
     private readonly DatabaseAccessKeys _keys;
+    /// <inheritdoc/>
 
     public abstract string MethodName { get; }
+    /// <inheritdoc/>
 
     public abstract string RestPath { get; }
+    /// <inheritdoc/>
 
     public abstract string HttpMethod { get; }
+    /// <inheritdoc/>
 
     public IDictionary<string, IParameter> RequestParameters { get; private set; }
+    /// <inheritdoc/>
 
     public IClientService Service => _service;
+    /// <inheritdoc/>
 
     public DatabaseAccessKeys Keys => _keys;
 
@@ -48,6 +48,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
     /// <see cref="P:VuforiaPortal.Apis.Requests.ClientServiceRequest`1.RequestParameters" /> dictionary.
     /// </summary>
     protected virtual void InitParameters() => RequestParameters = new Dictionary<string, IParameter>();
+    /// <inheritdoc/>
 
     public TResponse Execute()
     {
@@ -65,6 +66,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
             throw ex;
         }
     }
+    /// <inheritdoc/>
 
     public Stream ExecuteAsStream()
     {
@@ -81,8 +83,10 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
             throw ex;
         }
     }
+    /// <inheritdoc/>
 
     public async Task<TResponse> ExecuteAsync() => await ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
+    /// <inheritdoc/>
 
     public async Task<TResponse> ExecuteAsync(CancellationToken cancellationToken)
     {
@@ -94,18 +98,16 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
         }
         return response1;
     }
+    /// <inheritdoc/>
 
     public async Task<Stream> ExecuteAsStreamAsync() => await ExecuteAsStreamAsync(CancellationToken.None).ConfigureAwait(false);
+    /// <inheritdoc/>
 
     public async Task<Stream> ExecuteAsStreamAsync(CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponseMessage = await ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false);
         cancellationToken.ThrowIfCancellationRequested();
-#if netcoreapp3_1 || netstandard2_1
         return await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
-#else
-        return await httpResponseMessage.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-#endif
     }
 
     /// <summary>Sync executes the request without parsing the result. </summary>
@@ -127,6 +129,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
             HttpStatusCode = response.StatusCode
         };
     }
+    /// <inheritdoc/>
 
     public HttpRequestMessage CreateRequest(bool? overrideGZipEnabled = null)
     {
@@ -158,6 +161,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
 
     /// <summary>Generates the right URL for this request.</summary>
     protected string GenerateRequestUri() => CreateBuilder().BuildUri().ToString();
+    /// <inheritdoc/>
 
     protected virtual object GetBody() => null;
 

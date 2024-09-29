@@ -3,13 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VuforiaWebService.Api.Auth", "VuforiaWebService.Api.Auth\VuforiaWebService.Api.Auth.csproj", "{8CD438E8-5778-42E4-ACE2-06E2D4F4253F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VuforiaWebService.Api.Core", "src\VuforiaWebService.Api.Core\VuforiaWebService.Api.Core.csproj", "{DC0F7505-F6DB-45B1-BD4F-668FFF42F420}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VuforiaWebService.Api.Core", "VuforiaWebService.Api.Core\VuforiaWebService.Api.Core.csproj", "{D4E4217D-453B-4F89-B63F-22F1445AD484}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VuforiaWebService.Api.Auth", "src\VuforiaWebService.Api.Auth\VuforiaWebService.Api.Auth.csproj", "{2B4C05BC-0A2D-4E3A-8E4D-A9EA5050A37E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VuforiaWebService.Api.Target", "VuforiaWebService.Api.Target\VuforiaWebService.Api.Target.csproj", "{73862FC9-352A-48E3-B17F-072F6468B033}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VuforiaWebService.Api.Target", "src\VuforiaWebService.Api.Target\VuforiaWebService.Api.Target.csproj", "{60234D05-3C3E-48D2-8593-27CD292DCFB9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VuforiaWebService.App", "VuforiaWebService.App\VuforiaWebService.App.csproj", "{BEED2936-D989-4C3C-B1A1-DE9117ED377D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8CD3E59D-70FD-4A94-A12E-59CE6923308D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,22 +23,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8CD438E8-5778-42E4-ACE2-06E2D4F4253F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8CD438E8-5778-42E4-ACE2-06E2D4F4253F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8CD438E8-5778-42E4-ACE2-06E2D4F4253F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8CD438E8-5778-42E4-ACE2-06E2D4F4253F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4E4217D-453B-4F89-B63F-22F1445AD484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4E4217D-453B-4F89-B63F-22F1445AD484}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4E4217D-453B-4F89-B63F-22F1445AD484}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4E4217D-453B-4F89-B63F-22F1445AD484}.Release|Any CPU.Build.0 = Release|Any CPU
-		{73862FC9-352A-48E3-B17F-072F6468B033}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{73862FC9-352A-48E3-B17F-072F6468B033}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{73862FC9-352A-48E3-B17F-072F6468B033}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{73862FC9-352A-48E3-B17F-072F6468B033}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BEED2936-D989-4C3C-B1A1-DE9117ED377D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BEED2936-D989-4C3C-B1A1-DE9117ED377D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BEED2936-D989-4C3C-B1A1-DE9117ED377D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BEED2936-D989-4C3C-B1A1-DE9117ED377D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC0F7505-F6DB-45B1-BD4F-668FFF42F420}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC0F7505-F6DB-45B1-BD4F-668FFF42F420}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC0F7505-F6DB-45B1-BD4F-668FFF42F420}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC0F7505-F6DB-45B1-BD4F-668FFF42F420}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B4C05BC-0A2D-4E3A-8E4D-A9EA5050A37E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B4C05BC-0A2D-4E3A-8E4D-A9EA5050A37E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B4C05BC-0A2D-4E3A-8E4D-A9EA5050A37E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B4C05BC-0A2D-4E3A-8E4D-A9EA5050A37E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60234D05-3C3E-48D2-8593-27CD292DCFB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60234D05-3C3E-48D2-8593-27CD292DCFB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60234D05-3C3E-48D2-8593-27CD292DCFB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60234D05-3C3E-48D2-8593-27CD292DCFB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
