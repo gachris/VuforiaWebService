@@ -1,6 +1,9 @@
-﻿using VuforiaWebService.Api.Core.Types;
+﻿using VuforiaWebService.Api.Core.Extensions;
+using VuforiaWebService.Api.Core.Logger;
+using VuforiaWebService.Api.Core.Types;
+using VuforiaWebService.Api.Core.Utils;
 
-namespace VuforiaWebService.Api.Core;
+namespace VuforiaWebService.Api.Core.Request;
 
 /// <summary>
 /// Represents an abstract, strongly typed request base class to make requests to a service.

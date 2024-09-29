@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Text;
 
-namespace VuforiaWebService.Api.Core;
+namespace VuforiaWebService.Api.Core.Extensions;
 
 /// <summary>Extension methods to <see cref="T:System.Net.Http.HttpRequestMessage" />.</summary>
 internal static class HttpRequestMessageExtenstions

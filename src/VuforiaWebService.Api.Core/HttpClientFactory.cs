@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using VuforiaWebService.Api.Core.Logger;
 
 namespace VuforiaWebService.Api.Core;
 

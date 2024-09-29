@@ -4,30 +4,14 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using VuforiaWebService.Api.Core.Extensions;
 
-namespace VuforiaWebService.Api.Core;
+namespace VuforiaWebService.Api.Core.Utils;
 
 public static class Utilities
 {
     /// <summary>Returns the version of the core library.</summary>
     public static string GetLibraryVersion() => Regex.Match(typeof(Utilities).Assembly.FullName, "Version=([\\d\\.]+)").Groups[1].ToString();
-
-    /// <summary>
-    /// A VuforiaPortal.Apis utility method for throwing an <see cref="T:System.ArgumentNullException" /> if the object is
-    /// <c>null</c>.
-    /// </summary>
-    public static T ThrowIfNull<T>(this T obj, string paramName) => obj == null ? throw new ArgumentNullException(paramName) : obj;
-
-    /// <summary>
-    /// A VuforiaPortal.Apis utility method for throwing an <see cref="T:System.ArgumentNullException" /> if the string is
-    /// <c>null</c> or empty.
-    /// </summary>
-    /// <returns>The original string.</returns>
-    public static string ThrowIfNullOrEmpty(this string str, string paramName) => string.IsNullOrEmpty(str) ? throw new ArgumentException("Parameter was empty", paramName) : str;
-
-    /// <summary>Returns <c>true</c> in case the enumerable is <c>null</c> or empty.</summary>
-    internal static bool IsNullOrEmpty<T>(this IEnumerable<T> coll) => coll != null ? coll.Count() == 0 : true;
-
     /// <summary>
     /// A VuforiaPortal.Apis utility method for returning the first matching custom attribute (or <c>null</c>) of the specified member.
     /// </summary>

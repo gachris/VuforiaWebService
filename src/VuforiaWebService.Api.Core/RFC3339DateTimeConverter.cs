@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using VuforiaWebService.Api.Core.Utils;
 
 namespace VuforiaWebService.Api.Core;
 

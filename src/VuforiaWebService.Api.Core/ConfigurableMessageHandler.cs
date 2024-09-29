@@ -6,6 +6,9 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using VuforiaWebService.Api.Core.Extensions;
+using VuforiaWebService.Api.Core.Logger;
+using VuforiaWebService.Api.Core.Utils;
 
 namespace VuforiaWebService.Api.Core;
 

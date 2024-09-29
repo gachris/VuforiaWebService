@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using VuforiaWebService.Api.Core.Extensions;
+using VuforiaWebService.Api.Core.Logger;
 using VuforiaWebService.Api.Core.Types;
 
 namespace VuforiaWebService.Api.Core;

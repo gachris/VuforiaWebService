@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using VuforiaWebService.Api.Core.Extensions;
+using VuforiaWebService.Api.Core.Logger;
+using VuforiaWebService.Api.Core.Serialization;
 using VuforiaWebService.Api.Core.Types;
 
 namespace VuforiaWebService.Api.Core;

@@ -1,4 +1,5 @@
 ﻿using System;
+using VuforiaWebService.Api.Core.Extensions;
 
 namespace VuforiaWebService.Api.Core;
 

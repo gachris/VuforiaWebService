@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using VuforiaWebService.Api.Core.Extensions;
 using VuforiaWebService.Api.Core.Types;
 
 namespace VuforiaWebService.Api.Core;

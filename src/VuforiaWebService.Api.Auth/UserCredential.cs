@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using VuforiaWebService.Api.Core;
+using VuforiaWebService.Api.Core.Logger;
 using VuforiaWebService.Api.Core.Types;
 
 namespace VuforiaWebService.Api.Auth;

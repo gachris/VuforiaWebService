@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace VuforiaWebService.Api.Core;
+namespace VuforiaWebService.Api.Core.Serialization;
 
 /// <summary>Class for serialization and deserialization of JSON documents using the Newtonsoft Library.</summary>
 public class NewtonsoftJsonSerializer : IJsonSerializer, ISerializer

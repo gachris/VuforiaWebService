@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace VuforiaWebService.Api.Core;
+namespace VuforiaWebService.Api.Core.Request;
 
 /// <summary>A client service request which supports both sync and async execution to get the stream.</summary>
 public interface IClientServiceRequest

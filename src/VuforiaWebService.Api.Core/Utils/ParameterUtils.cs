@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Reflection;
 using VuforiaWebService.Api.Core.Types;
 
-namespace VuforiaWebService.Api.Core;
+namespace VuforiaWebService.Api.Core.Utils;
 
 /// <summary>
 /// Utility class for iterating on <see cref="T:VuforiaPortal.Apis.Util.RequestParameterAttribute" /> properties in a request object.

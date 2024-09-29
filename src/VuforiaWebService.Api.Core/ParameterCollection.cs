@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
+using VuforiaWebService.Api.Core.Extensions;
+using VuforiaWebService.Api.Core.Utils;
 
 namespace VuforiaWebService.Api.Core;
 
@@ -105,7 +105,7 @@ public class ParameterCollection : List<KeyValuePair<string, string>>
         ParameterCollection parameterCollection = new ParameterCollection();
         foreach (KeyValuePair<string, object> keyValuePair in dictionary)
         {
-            if (!(keyValuePair.Value is string) && keyValuePair.Value is IEnumerable enumerable)
+            if (keyValuePair.Value is not string and IEnumerable enumerable)
             {
                 foreach (object o in enumerable)
                     parameterCollection.Add(keyValuePair.Key, Utilities.ConvertToString(o));

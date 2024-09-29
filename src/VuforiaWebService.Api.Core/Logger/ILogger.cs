@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VuforiaWebService.Api.Core;
+namespace VuforiaWebService.Api.Core.Logger;
 
 public interface ILogger
 {
