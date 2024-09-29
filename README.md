@@ -4,7 +4,7 @@
 This repository contains a C# client for interacting with the Vuforia Web Service API. The client provides methods for managing targets within a Vuforia database, allowing for actions such as listing targets, retrieving reports, and managing target data.
 
 ## Features
-- **Authentication**: Utilize `DatabaseAccessKeys` for secure access to the Vuforia API.
+- **Authentication**: Utilize `ServerAccessKeys` for secure access to the Vuforia API.
 - **Manage Targets**: List, retrieve, update, and delete targets from the Vuforia database.
 - **Database Reports**: Get summary reports for the database and target summaries.
 - **Similarity Check**: Check for similar targets in the database.
@@ -37,11 +37,11 @@ dotnet build
 Replace `ACCESS_KEY` and `SECRET_KEY` in the `GetKeys` method with your actual Vuforia API keys.
 
 ```csharp
-private static DatabaseAccessKeys GetKeys()
+private static ServerAccessKeys GetKeys()
 {
     if (_keys == null)
     {
-        _keys = new DatabaseAccessKeys("YOUR_ACCESS_KEY", "YOUR_SECRET_KEY");
+        _keys = new ServerAccessKeys("YOUR_ACCESS_KEY", "YOUR_SECRET_KEY");
     }
     return _keys;
 }
@@ -62,7 +62,7 @@ private static void Main()
 {
     try
     {
-        DatabaseAccessKeys keys = GetKeys();
+        ServerAccessKeys keys = GetKeys();
         TargetListResource resource = new TargetListResource(GetService());
         
         // Example: List all targets

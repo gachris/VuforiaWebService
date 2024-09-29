@@ -1,196 +1,333 @@
 using Moq;
-using VuforiaWebService.Api.Auth;
 using VuforiaWebService.Api.Core;
-using VuforiaWebService.Api.Target.Resources;
-using VuforiaWebService.Api.Target.Services;
+using VuforiaWebService.Api.Core.Response;
+using VuforiaWebService.Api.Target.Tests.Resource;
 using VuforiaWebService.Api.Target.Types;
 
 namespace VuforiaWebService.Tests;
 
+[TestFixture]
 public class VuforiaApiTests
 {
-    private Mock<TargetListResource> _mockTargetListResource;
-    private Mock<TargetListResource.ListRequest> _mockTargetListRequest;
-    private Mock<TargetService> _mockTargetService;
-    private DatabaseAccessKeys _mockDatabaseAccessKeys;
-    private PostTrackableRequest _mockPostTrackableRequest;
-
-    private static void Main1()
-    {
-        //var resource = new TargetListResource(GetService());
-        //var vuforiaGetAllResponse = resource.List(GetKeys()).Execute();
-        //var vuforiaGetDatabaseSummaryReportResponse = resource.GetDatabaseSummaryReport(GetKeys()).Execute();
-
-        //foreach (var item in vuforiaGetAllResponse.Results)
-        //{
-        //    var vuforiaCheckSimilarResponse = resource.CheckSimilar(GetKeys(), item).Execute();
-        //}
-
-        //var vuforiaDeleteResponse = resource.Delete(GetKeys(), "TARGET_ID").Execute();
-        //var vuforiaRetrieveResponse = resource.Get(GetKeys(), "TARGET_ID").Execute();
-        //var vuforiaPostResponse = resource.Insert(GetKeys(), new Api.Target.Types.PostTrackableRequest()).Execute();
-        //var vuforiaRetrieveTargetSummaryReportResponse = resource.RetrieveTargetSummaryReport(GetKeys(), "TARGET_ID").Execute();
-        //var vuforiaUpdateResponse = resource.Update(GetKeys(), new Api.Target.Types.PostTrackableRequest(), "TARGET_ID").Execute();
-    }
-
-    private static TargetService GetService()
-    {
-        var userCredentials = AuthorizationBroker.AuthorizeAsync();
-        return new TargetService(new BaseClientService.Initializer()
-        {
-            ApplicationName = "APPLICATION_NAME",
-            HttpClientInitializer = userCredentials
-        });
-    }
+    private Mock<ITargetListTestResource> _mockTargetListResource;
+    private ServerAccessKeys _mockServerAccessKeys;
+    private const string TARGET_ID = "TARGET_ID";
+    private const string TRANSACTION_ID = "TRANSACTION_ID";
 
     [SetUp]
     public void Setup()
     {
-        Main1();
-        // Initialize mocks
-        _mockTargetService = new Mock<TargetService>(MockBehavior.Strict);
-
-        _mockTargetListResource = new Mock<TargetListResource>(_mockTargetService.Object);
-        _mockPostTrackableRequest = new PostTrackableRequest();
-
-        _mockTargetListRequest = new Mock<TargetListResource.ListRequest>();
+        _mockTargetListResource = new Mock<ITargetListTestResource>();
+        _mockServerAccessKeys = new ServerAccessKeys("ACCESS_KEY", "SECRET_KEY");
     }
 
     [Test]
-    public void List_Calls_TargetListResource_List_Method()
+    public void List_ValidResponse_ReturnsExpectedResult()
     {
         // Arrange
-        _mockTargetListResource.Setup(x => x.List(It.IsAny<DatabaseAccessKeys>()))
-                               .Returns(_mockTargetListRequest.Object);
+        var response = CreateValidGetAllResponse();
+
+        _mockTargetListResource.Setup(x => x.List(It.IsAny<ServerAccessKeys>()))
+                               .Returns(response);
 
         // Act
-        var result = _mockTargetListResource.Object.List(_mockDatabaseAccessKeys);
+        var result = _mockTargetListResource.Object.List(_mockServerAccessKeys);
 
         // Assert
-        _mockTargetListResource.Verify(x => x.List(_mockDatabaseAccessKeys), Times.Once);
-        Assert.IsNotNull(result);
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.TransactionId, Is.EqualTo(TRANSACTION_ID));
+        Assert.That(result.ResultCode, Is.EqualTo(VuforiaBaseResponse.ResultCodeEnum.Success));
+        Assert.That(result.Results, Has.Length.EqualTo(1));
+        Assert.That(result.Results[0], Is.EqualTo(TARGET_ID));
+
+        // Verify mock method was called once
+        _mockTargetListResource.Verify(x => x.List(_mockServerAccessKeys), Times.Once);
     }
 
     [Test]
-    public void GetDatabaseSummaryReport_Calls_Correct_Method()
+    public void Get_ValidTargetId_ReturnsCorrectData()
     {
-        //// Arrange
-        //_mockTargetListResource.Setup(x => x.GetDatabaseSummaryReport(It.IsAny<DatabaseAccessKeys>()))
-        //                       .Returns(_mockTargetListResource.Object);
+        // Arrange
+        var response = CreateValidRetrieveResponse();
 
-        //// Act
-        //var result = _mockTargetListResource.Object.GetDatabaseSummaryReport(_mockDatabaseAccessKeys);
+        _mockTargetListResource.Setup(x => x.Get(It.IsAny<ServerAccessKeys>(), TARGET_ID))
+                               .Returns(response);
 
-        //// Assert
-        //_mockTargetListResource.Verify(x => x.GetDatabaseSummaryReport(_mockDatabaseAccessKeys), Times.Once);
-        //Assert.IsNotNull(result);
+        // Act
+        var result = _mockTargetListResource.Object.Get(_mockServerAccessKeys, TARGET_ID);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.TransactionId, Is.EqualTo(TRANSACTION_ID));
+        Assert.That(result.ResultCode, Is.EqualTo(VuforiaBaseResponse.ResultCodeEnum.Success));
+        Assert.That(result.Status, Is.EqualTo(VuforiaRetrieveResponse.StatusEnum.Success));
+
+        // Assert TargetRecord properties
+        var targetRecord = result.TargetRecord;
+        Assert.That(targetRecord, Is.Not.Null);
+        Assert.That(targetRecord.TargetId, Is.EqualTo(TARGET_ID));
+        Assert.That(targetRecord.ActiveFlag, Is.EqualTo("true"));
+        Assert.That(targetRecord.TrackingRating, Is.EqualTo(5));
+        Assert.That(targetRecord.Width, Is.EqualTo(1));
+
+        // Verify mock method was called once
+        _mockTargetListResource.Verify(x => x.Get(_mockServerAccessKeys, TARGET_ID), Times.Once);
     }
 
     [Test]
-    public void CheckSimilar_Calls_Correct_Method()
+    public void Insert_ValidRequest_CallsInsertOnce()
     {
-        //// Arrange
-        //var targetId = "TARGET_ID";
-        //_mockTargetListResource.Setup(x => x.CheckSimilar(It.IsAny<DatabaseAccessKeys>(), targetId))
-        //                       .Returns(_mockTargetListResource.Object);
+        // Arrange
+        var request = CreatePostTrackableRequest();
+        var response = CreatePostResponse();
 
-        //// Act
-        //var result = _mockTargetListResource.Object.CheckSimilar(_mockDatabaseAccessKeys, targetId);
+        _mockTargetListResource.Setup(x => x.Insert(It.IsAny<ServerAccessKeys>(), request))
+                               .Returns(response);
 
-        //// Assert
-        //_mockTargetListResource.Verify(x => x.CheckSimilar(_mockDatabaseAccessKeys, targetId), Times.Once);
-        //Assert.IsNotNull(result);
+        // Act
+        var result = _mockTargetListResource.Object.Insert(_mockServerAccessKeys, request);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.TransactionId, Is.EqualTo(TRANSACTION_ID));
+        Assert.That(result.ResultCode, Is.EqualTo(VuforiaBaseResponse.ResultCodeEnum.Success));
+        Assert.That(result.TargetId, Is.EqualTo(TARGET_ID));
+
+        // Verify the Insert method was called once
+        _mockTargetListResource.Verify(x => x.Insert(_mockServerAccessKeys, request), Times.Once);
     }
 
     [Test]
-    public void Delete_Calls_Correct_Method()
+    public void Update_ValidRequest_CallsUpdateOnce()
     {
-        //// Arrange
-        //var targetId = "TARGET_ID";
-        //_mockTargetListResource.Setup(x => x.Delete(It.IsAny<DatabaseAccessKeys>(), targetId))
-        //                       .Returns(_mockTargetListResource.Object);
+        // Arrange
+        var request = CreatePostTrackableRequest();
+        var response = CreateUpdateResponse();
 
-        //// Act
-        //var result = _mockTargetListResource.Object.Delete(_mockDatabaseAccessKeys, targetId);
+        _mockTargetListResource.Setup(x => x.Update(It.IsAny<ServerAccessKeys>(), request, TARGET_ID))
+                               .Returns(response);
 
-        //// Assert
-        //_mockTargetListResource.Verify(x => x.Delete(_mockDatabaseAccessKeys, targetId), Times.Once);
-        //Assert.IsNotNull(result);
+        // Act
+        var result = _mockTargetListResource.Object.Update(_mockServerAccessKeys, request, TARGET_ID);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.TransactionId, Is.EqualTo(TRANSACTION_ID));
+        Assert.That(result.ResultCode, Is.EqualTo(VuforiaBaseResponse.ResultCodeEnum.Success));
+
+        // Verify the Update method was called once
+        _mockTargetListResource.Verify(x => x.Update(_mockServerAccessKeys, request, TARGET_ID), Times.Once);
     }
 
     [Test]
-    public void Get_Calls_Correct_Method()
+    public void Delete_ValidTargetId_CallsDeleteOnce()
     {
-        //// Arrange
-        //var targetId = "TARGET_ID";
-        //_mockTargetListResource.Setup(x => x.Get(It.IsAny<DatabaseAccessKeys>(), targetId))
-        //                       .Returns(_mockTargetListResource.Object);
+        // Arrange
+        var response = CreateDeleteResponse();
 
-        //// Act
-        //var result = _mockTargetListResource.Object.Get(_mockDatabaseAccessKeys, targetId);
+        _mockTargetListResource.Setup(x => x.Delete(It.IsAny<ServerAccessKeys>(), TARGET_ID))
+                               .Returns(response);
 
-        //// Assert
-        //_mockTargetListResource.Verify(x => x.Get(_mockDatabaseAccessKeys, targetId), Times.Once);
-        //Assert.IsNotNull(result);
+        // Act
+        var result = _mockTargetListResource.Object.Delete(_mockServerAccessKeys, TARGET_ID);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.TransactionId, Is.EqualTo(TRANSACTION_ID));
+        Assert.That(result.ResultCode, Is.EqualTo(VuforiaBaseResponse.ResultCodeEnum.Success));
+
+        // Verify the Delete method was called once
+        _mockTargetListResource.Verify(x => x.Delete(_mockServerAccessKeys, TARGET_ID), Times.Once);
     }
 
     [Test]
-    public void Insert_Calls_Correct_Method()
+    public void CheckSimilar_ValidResponse_CallsCheckSimilarOnce()
     {
-        //// Arrange
-        //_mockTargetListResource.Setup(x => x.Insert(It.IsAny<DatabaseAccessKeys>(), _mockPostTrackableRequest))
-        //                       .Returns(_mockTargetListResource.Object);
+        // Arrange
+        var response = CreateCheckSimilarResponse();
 
-        //// Act
-        //var result = _mockTargetListResource.Object.Insert(_mockDatabaseAccessKeys, _mockPostTrackableRequest);
+        _mockTargetListResource.Setup(x => x.CheckSimilar(It.IsAny<ServerAccessKeys>(), TARGET_ID))
+                               .Returns(response);
 
-        //// Assert
-        //_mockTargetListResource.Verify(x => x.Insert(_mockDatabaseAccessKeys, _mockPostTrackableRequest), Times.Once);
-        //Assert.IsNotNull(result);
+        // Act
+        var result = _mockTargetListResource.Object.CheckSimilar(_mockServerAccessKeys, TARGET_ID);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.SimilarTargets, Is.Not.Empty);
+        Assert.That(result.SimilarTargets[0], Is.EqualTo(TARGET_ID));
+        Assert.That(result.TransactionId, Is.EqualTo(TRANSACTION_ID));
+        Assert.That(result.ResultCode, Is.EqualTo(VuforiaBaseResponse.ResultCodeEnum.Success));
+
+        // Verify the CheckSimilar method was called once
+        _mockTargetListResource.Verify(x => x.CheckSimilar(_mockServerAccessKeys, TARGET_ID), Times.Once);
     }
 
     [Test]
-    public void RetrieveTargetSummaryReport_Calls_Correct_Method()
+    public void RetrieveTargetSummaryReport_ValidResponse_CallsRetrieveOnce()
     {
-        //// Arrange
-        //var targetId = "TARGET_ID";
-        //_mockTargetListResource.Setup(x => x.RetrieveTargetSummaryReport(It.IsAny<DatabaseAccessKeys>(), targetId))
-        //                       .Returns(_mockTargetListResource.Object);
+        // Arrange
+        var response = CreateRetrieveTargetSummaryReportResponse();
 
-        //// Act
-        //var result = _mockTargetListResource.Object.RetrieveTargetSummaryReport(_mockDatabaseAccessKeys, targetId);
+        _mockTargetListResource.Setup(x => x.RetrieveTargetSummaryReport(It.IsAny<ServerAccessKeys>(), TARGET_ID))
+                               .Returns(response);
 
-        //// Assert
-        //_mockTargetListResource.Verify(x => x.RetrieveTargetSummaryReport(_mockDatabaseAccessKeys, targetId), Times.Once);
-        //Assert.IsNotNull(result);
+        // Act
+        var result = _mockTargetListResource.Object.RetrieveTargetSummaryReport(_mockServerAccessKeys, TARGET_ID);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.TransactionId, Is.EqualTo(TRANSACTION_ID));
+        Assert.That(result.TotalRecos, Is.EqualTo(100));
+        Assert.That(result.PreviousMonthRecos, Is.EqualTo(50));
+        Assert.That(result.CurrentMonthRecos, Is.EqualTo(100)); // Added
+        Assert.That(result.ActiveFlag, Is.True); // Added
+        Assert.That(result.Status, Is.EqualTo(VuforiaRetrieveTargetSummaryReportResponse.StatusEnum.Success)); // Added
+
+        _mockTargetListResource.Verify(x => x.RetrieveTargetSummaryReport(_mockServerAccessKeys, TARGET_ID), Times.Once);
     }
 
     [Test]
-    public void Update_Calls_Correct_Method()
+    public void GetDatabaseSummaryReport_ValidResponse_CallsGetDatabaseSummaryOnce()
     {
-        //// Arrange
-        //var targetId = "TARGET_ID";
-        //_mockTargetListResource.Setup(x => x.Update(It.IsAny<DatabaseAccessKeys>(), _mockPostTrackableRequest, targetId))
-        //                       .Returns(_mockTargetListResource.Object);
+        // Arrange
+        var response = CreateDatabaseSummaryReportResponse();
 
-        //// Act
-        //var result = _mockTargetListResource.Object.Update(_mockDatabaseAccessKeys, _mockPostTrackableRequest, targetId);
+        _mockTargetListResource.Setup(x => x.GetDatabaseSummaryReport(It.IsAny<ServerAccessKeys>()))
+                               .Returns(response);
 
-        //// Assert
-        //_mockTargetListResource.Verify(x => x.Update(_mockDatabaseAccessKeys, _mockPostTrackableRequest, targetId), Times.Once);
-        //Assert.IsNotNull(result);
+        // Act
+        var result = _mockTargetListResource.Object.GetDatabaseSummaryReport(_mockServerAccessKeys);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.TransactionId, Is.EqualTo(TRANSACTION_ID));
+        Assert.That(result.ActiveImages, Is.EqualTo(5));
+        Assert.That(result.FailedImages, Is.EqualTo(5));
+        Assert.That(result.InactiveImages, Is.EqualTo(5));
+        Assert.That(result.ResultCode, Is.EqualTo(VuforiaBaseResponse.ResultCodeEnum.Success)); // Added
+
+        _mockTargetListResource.Verify(x => x.GetDatabaseSummaryReport(_mockServerAccessKeys), Times.Once);
     }
 
     [Test]
-    public void ExceptionHandling_When_Api_Fails()
+    public void ExceptionHandling_WhenApiFails_ThrowsVuforiaPortalApiException()
     {
-        //// Arrange
-        //var targetId = "TARGET_ID";
-        //_mockTargetListResource.Setup(x => x.Get(It.IsAny<DatabaseAccessKeys>(), targetId))
-        //                       .Throws(new VuforiaPortalApiException("API Error"));
+        // Arrange
+        _mockTargetListResource.Setup(x => x.Get(It.IsAny<ServerAccessKeys>(), TARGET_ID))
+                               .Throws(new VuforiaPortalApiException(nameof(VuforiaApiTests), "API Error"));
 
-        //// Act & Assert
-        //Assert.Throws<VuforiaPortalApiException>(() => _mockTargetListResource.Object.Get(_mockDatabaseAccessKeys, targetId));
-        //_mockTargetListResource.Verify(x => x.Get(_mockDatabaseAccessKeys, targetId), Times.Once);
+        // Act & Assert
+        Assert.Throws<VuforiaPortalApiException>(() => _mockTargetListResource.Object.Get(_mockServerAccessKeys, TARGET_ID));
+
+        // Verify the Get method was called once
+        _mockTargetListResource.Verify(x => x.Get(_mockServerAccessKeys, TARGET_ID), Times.Once);
+    }
+
+    // Helper methods to create responses
+    private static VuforiaGetAllResponse CreateValidGetAllResponse()
+    {
+        return new VuforiaGetAllResponse
+        {
+            TransactionId = TRANSACTION_ID,
+            ResultCode = VuforiaBaseResponse.ResultCodeEnum.Success,
+            Results = [TARGET_ID]
+        };
+    }
+
+    private static VuforiaRetrieveResponse CreateValidRetrieveResponse()
+    {
+        return new VuforiaRetrieveResponse
+        {
+            Status = VuforiaRetrieveResponse.StatusEnum.Success,
+            TargetRecord = new TargetRecordModel
+            {
+                ActiveFlag = "true",
+                TrackingRating = 5,
+                TargetId = TARGET_ID,
+                Width = 1
+            },
+            TransactionId = TRANSACTION_ID,
+            ResultCode = VuforiaBaseResponse.ResultCodeEnum.Success
+        };
+    }
+
+    private static PostTrackableRequest CreatePostTrackableRequest()
+    {
+        return new PostTrackableRequest
+        {
+            ActiveFlag = true,
+            ApplicationMetadata = "Target Metadata",
+            Image = "/9j/4AAQSkZJRgABAQEAAAAAAAD...",
+            Name = "Sample Target",
+            Width = 1
+        };
+    }
+
+    private static VuforiaPostResponse CreatePostResponse()
+    {
+        return new VuforiaPostResponse
+        {
+            TransactionId = TRANSACTION_ID,
+            ResultCode = VuforiaBaseResponse.ResultCodeEnum.Success,
+            TargetId = TARGET_ID
+        };
+    }
+
+    private static VuforiaUpdateResponse CreateUpdateResponse()
+    {
+        return new VuforiaUpdateResponse
+        {
+            TransactionId = TRANSACTION_ID,
+            ResultCode = VuforiaBaseResponse.ResultCodeEnum.Success
+        };
+    }
+
+    private static VuforiaDeleteResponse CreateDeleteResponse()
+    {
+        return new VuforiaDeleteResponse
+        {
+            TransactionId = TRANSACTION_ID,
+            ResultCode = VuforiaBaseResponse.ResultCodeEnum.Success
+        };
+    }
+
+    private static VuforiaCheckSimilarResponse CreateCheckSimilarResponse()
+    {
+        return new VuforiaCheckSimilarResponse
+        {
+            SimilarTargets = [TARGET_ID],
+            TransactionId = TRANSACTION_ID,
+            ResultCode = VuforiaBaseResponse.ResultCodeEnum.Success
+        };
+    }
+
+    private static VuforiaRetrieveTargetSummaryReportResponse CreateRetrieveTargetSummaryReportResponse()
+    {
+        return new VuforiaRetrieveTargetSummaryReportResponse
+        {
+            ActiveFlag = true,
+            CurrentMonthRecos = 100,
+            DatabaseName = "TestDB",
+            PreviousMonthRecos = 50,
+            Status = VuforiaRetrieveTargetSummaryReportResponse.StatusEnum.Success,
+            TargetName = "Sample Target",
+            TotalRecos = 100,
+            TrackingRating = 5,
+            TransactionId = TRANSACTION_ID,
+            ResultCode = VuforiaBaseResponse.ResultCodeEnum.Success
+        };
+    }
+
+    private static VuforiaGetDatabaseSummaryReportResponse CreateDatabaseSummaryReportResponse()
+    {
+        return new VuforiaGetDatabaseSummaryReportResponse
+        {
+            ActiveImages = 5,
+            FailedImages = 5,
+            InactiveImages = 5,
+            TransactionId = TRANSACTION_ID,
+            ResultCode = VuforiaBaseResponse.ResultCodeEnum.Success
+        };
     }
 }

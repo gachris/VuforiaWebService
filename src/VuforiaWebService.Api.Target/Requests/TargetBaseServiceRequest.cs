@@ -13,7 +13,7 @@ public abstract class TargetBaseServiceRequest<TResponse> : ClientServiceRequest
     /// </summary>
     /// <param name="service">The client service instance used to make the request.</param>
     /// <param name="keys">The database access keys required for authorization.</param>
-    protected TargetBaseServiceRequest(IClientService service, DatabaseAccessKeys keys) : base(service, keys)
+    protected TargetBaseServiceRequest(IClientService service, ServerAccessKeys keys) : base(service, keys)
     {
     }
 }

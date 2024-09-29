@@ -39,5 +39,5 @@ public class ExponentialBackOffInitializer : IConfigurableHttpClientInitializer
     }
 
     /// <inheritdoc/>
-    public void GenerateAccessToken(IClientService clientService, DatabaseAccessKeys keys, string httpMethod, object body, string requestPath) => throw new NotImplementedException();
+    public void GenerateAccessToken(IClientService clientService, ServerAccessKeys keys, string httpMethod, object body, string requestPath) => throw new NotImplementedException();
 }

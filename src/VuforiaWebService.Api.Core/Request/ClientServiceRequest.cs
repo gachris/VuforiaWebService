@@ -23,7 +23,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
     /// <summary>
     /// The Database Access Keys.
     /// </summary>
-    private readonly DatabaseAccessKeys _keys;
+    private readonly ServerAccessKeys _keys;
 
     /// <inheritdoc/>
     public abstract string MethodName { get; }
@@ -43,12 +43,12 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
     /// <summary>
     /// Gets the Database Access Keys.
     /// </summary>
-    public DatabaseAccessKeys Keys => _keys;
+    public ServerAccessKeys Keys => _keys;
 
     /// <summary>
     /// Creates a new service request.
     /// </summary>
-    protected ClientServiceRequest(IClientService service, DatabaseAccessKeys keys)
+    protected ClientServiceRequest(IClientService service, ServerAccessKeys keys)
     {
         _service = service;
         _keys = keys;

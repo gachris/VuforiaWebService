@@ -21,5 +21,5 @@ public interface IConfigurableHttpClientInitializer
     /// <param name="httpMethod">The HTTP method of the request (e.g., GET, POST).</param>
     /// <param name="body">The body of the request to be serialized.</param>
     /// <param name="requestPath">The path of the request being made.</param>
-    void GenerateAccessToken(IClientService clientService, DatabaseAccessKeys keys, string httpMethod, object body, string requestPath);
+    void GenerateAccessToken(IClientService clientService, ServerAccessKeys keys, string httpMethod, object body, string requestPath);
 }
