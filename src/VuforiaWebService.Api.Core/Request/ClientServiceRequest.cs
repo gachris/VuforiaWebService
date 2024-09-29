@@ -1,6 +1,5 @@
 ﻿using VuforiaWebService.Api.Core.Extensions;
 using VuforiaWebService.Api.Core.Logger;
-using VuforiaWebService.Api.Core.Response;
 using VuforiaWebService.Api.Core.Utils;
 
 namespace VuforiaWebService.Api.Core.Request;
@@ -191,10 +190,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
             if (!ParameterValidator.ValidateParameter(parameter, defaultValue))
                 throw new VuforiaPortalApiException(Service.Name, string.Format("Parameter validation failed for \"{0}\"", parameter.Name));
 
-            if (defaultValue == null)
-            {
-                defaultValue = parameter.DefaultValue;
-            }
+            defaultValue ??= parameter.DefaultValue;
             var parameterType = parameter.ParameterType;
             if (!(parameterType == "path"))
             {

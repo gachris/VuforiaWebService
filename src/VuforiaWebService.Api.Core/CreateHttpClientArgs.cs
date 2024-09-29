@@ -6,11 +6,6 @@ namespace VuforiaWebService.Api.Core;
 /// </summary>
 public class CreateHttpClientArgs
 {
-    /// <summary>G
-    /// ets or sets the network credential.
-    /// </summary>
-    public NetworkCredential NetworkCredential { get; set; }
-
     /// <summary>
     /// Gets or sets the application name that is sent in the User-Agent header.
     /// </summary>

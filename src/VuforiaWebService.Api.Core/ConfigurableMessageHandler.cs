@@ -9,55 +9,49 @@ namespace VuforiaWebService.Api.Core;
 /// <inheritdoc/>
 public class ConfigurableMessageHandler : DelegatingHandler
 {
-    /// <summary>The class logger.</summary>
+    /// <summary>
+    /// The class logger.
+    /// </summary>
     private static readonly ILogger _logger = ApplicationContext.Logger.ForType<ConfigurableMessageHandler>();
 
-    /// <summary>The current API version of this client library.</summary>
+    /// <summary>
+    /// The current API version of this client library.
+    /// </summary>
     private static readonly string ApiVersion = Utilities.GetLibraryVersion();
 
-    /// <summary>The User-Agent suffix header which contains the <see cref="ApiVersion" />.</summary>
-    private static readonly string UserAgentSuffix = "icloud-api-dotnet-client/" + ApiVersion;
+    /// <summary>
+    /// The User-Agent suffix header which contains the <see cref="ApiVersion" />.
+    /// </summary>
+    private static readonly string UserAgentSuffix = "VuforiaPortal-api-dotnet-client/" + ApiVersion;
 
-    private readonly object _unsuccessfulResponseHandlersLock = new object();
-    private readonly object _exceptionHandlersLock = new object();
-    private readonly object _executeInterceptorsLock = new object();
+    private readonly object _unsuccessfulResponseHandlersLock = new();
+    private readonly object _exceptionHandlersLock = new();
+    private readonly object _executeInterceptorsLock = new();
 
-    /// <summary>A list of <see cref="IHttpUnsuccessfulResponseHandler" />.</summary>
-    private readonly IList<IHttpUnsuccessfulResponseHandler> _unsuccessfulResponseHandlers = new List<IHttpUnsuccessfulResponseHandler>();
+    private readonly IList<IHttpUnsuccessfulResponseHandler> _unsuccessfulResponseHandlers = [];
+    private readonly IList<IHttpExceptionHandler> _exceptionHandlers = [];
+    private readonly IList<IHttpExecuteInterceptor> _executeInterceptors = [];
 
-    /// <summary>A list of <see cref="IHttpExceptionHandler" />.</summary>
-    private readonly IList<IHttpExceptionHandler> _exceptionHandlers = new List<IHttpExceptionHandler>();
-
-    /// <summary>A list of <see cref="IHttpExecuteInterceptor" />.</summary>
-    private readonly IList<IHttpExecuteInterceptor> _executeInterceptors = new List<IHttpExecuteInterceptor>();
-
-    /// <summary>Number of tries. Default is <c>3</c>.</summary>
     private int _numTries = 3;
-
-    /// <summary>Number of redirects allowed. Default is <c>10</c>.</summary>
     private int _numRedirects = 10;
 
-    /// <summary>Maximum allowed number of tries.</summary>
+    /// <summary>
+    /// Maximum allowed number of tries.
+    /// </summary>
     public const int _MaxAllowedNumTries = 20;
 
     /// <summary>
-    /// Gets a list of <see cref="IHttpUnsuccessfulResponseHandler" />s.
-    /// <remarks>
-    /// Since version 1.10, <see cref="AddUnsuccessfulResponseHandler(IHttpUnsuccessfulResponseHandler)" /> and
-    /// <see cref="RemoveUnsuccessfulResponseHandler(IHttpUnsuccessfulResponseHandler)" /> were added in order to keep this class thread-safe.
-    /// </remarks>
+    /// Adds the specified handler to the list of unsuccessful response handlers.
     /// </summary>
-    [Obsolete("Use AddUnsuccessfulResponseHandler or RemoveUnsuccessfulResponseHandler instead.")]
-    public IList<IHttpUnsuccessfulResponseHandler> UnsuccessfulResponseHandlers => _unsuccessfulResponseHandlers;
-
-    /// <summary>Adds the specified handler to the list of unsuccessful response handlers.</summary>
     public void AddUnsuccessfulResponseHandler(IHttpUnsuccessfulResponseHandler handler)
     {
         lock (_unsuccessfulResponseHandlersLock)
             _unsuccessfulResponseHandlers.Add(handler);
     }
 
-    /// <summary>Removes the specified handler from the list of unsuccessful response handlers.</summary>
+    /// <summary>
+    /// Removes the specified handler from the list of unsuccessful response handlers.
+    /// </summary>
     public void RemoveUnsuccessfulResponseHandler(IHttpUnsuccessfulResponseHandler handler)
     {
         lock (_unsuccessfulResponseHandlersLock)
@@ -65,23 +59,17 @@ public class ConfigurableMessageHandler : DelegatingHandler
     }
 
     /// <summary>
-    /// Gets a list of <see cref="IHttpExceptionHandler" />s.
-    /// <remarks>
-    /// Since version 1.10, <see cref="AddExceptionHandler(IHttpExceptionHandler)" /> and <see cref="RemoveExceptionHandler(IHttpExceptionHandler)" /> were added
-    /// in order to keep this class thread-safe.
-    /// </remarks>
+    /// Adds the specified handler to the list of exception handlers.
     /// </summary>
-    [Obsolete("Use AddExceptionHandler or RemoveExceptionHandler instead.")]
-    public IList<IHttpExceptionHandler> ExceptionHandlers => _exceptionHandlers;
-
-    /// <summary>Adds the specified handler to the list of exception handlers.</summary>
     public void AddExceptionHandler(IHttpExceptionHandler handler)
     {
         lock (_exceptionHandlersLock)
             _exceptionHandlers.Add(handler);
     }
 
-    /// <summary>Removes the specified handler from the list of exception handlers.</summary>
+    /// <summary>
+    /// Removes the specified handler from the list of exception handlers.
+    /// </summary>
     public void RemoveExceptionHandler(IHttpExceptionHandler handler)
     {
         lock (_exceptionHandlersLock)
@@ -89,23 +77,17 @@ public class ConfigurableMessageHandler : DelegatingHandler
     }
 
     /// <summary>
-    /// Gets a list of <see cref="IHttpExecuteInterceptor" />s.
-    /// <remarks>
-    /// Since version 1.10, <see cref="AddExecuteInterceptor(IHttpExecuteInterceptor)" /> and <see cref="RemoveExecuteInterceptor(IHttpExecuteInterceptor)" /> were
-    /// added in order to keep this class thread-safe.
-    /// </remarks>
+    /// Adds the specified interceptor to the list of execute interceptors.
     /// </summary>
-    [Obsolete("Use AddExecuteInterceptor or RemoveExecuteInterceptor instead.")]
-    public IList<IHttpExecuteInterceptor> ExecuteInterceptors => _executeInterceptors;
-
-    /// <summary>Adds the specified interceptor to the list of execute interceptors.</summary>
     public void AddExecuteInterceptor(IHttpExecuteInterceptor interceptor)
     {
         lock (_executeInterceptorsLock)
             _executeInterceptors.Add(interceptor);
     }
 
-    /// <summary>Removes the specified interceptor from the list of execute interceptors.</summary>
+    /// <summary>
+    /// Removes the specified interceptor from the list of execute interceptors.
+    /// </summary>
     public void RemoveExecuteInterceptor(IHttpExecuteInterceptor interceptor)
     {
         lock (_executeInterceptorsLock)
@@ -156,13 +138,19 @@ public class ConfigurableMessageHandler : DelegatingHandler
     /// </summary>
     public bool FollowRedirect { get; set; }
 
-    /// <summary>Gets or sets whether logging is enabled. Default value is <c>true</c>.</summary>
+    /// <summary>
+    /// Gets or sets whether logging is enabled. Default value is <c>true</c>.
+    /// </summary>
     public bool IsLoggingEnabled { get; set; }
 
-    /// <summary>Gets or sets the application name which will be used on the User-Agent header.</summary>
+    /// <summary>
+    /// Gets or sets the application name which will be used on the User-Agent header.
+    /// </summary>
     public string ApplicationName { get; set; }
 
-    /// <summary>Constructs a new configurable message handler.</summary>
+    /// <summary>
+    /// Constructs a new configurable message handler.
+    /// </summary>
     public ConfigurableMessageHandler(HttpMessageHandler httpMessageHandler) : base(httpMessageHandler)
     {
         FollowRedirect = true;
@@ -178,10 +166,12 @@ public class ConfigurableMessageHandler : DelegatingHandler
     {
         Exception lastException;
         var response = default(HttpResponseMessage);
+        var dateFormat = "ddd, dd MMM yyy HH:mm:ss";
         var loggable = IsLoggingEnabled && _logger.IsDebugEnabled;
         var triesRemaining = NumTries;
         var redirectRemaining = NumRedirects;
         request.Headers.Add("User-Agent", (ApplicationName == null ? "" : ApplicationName + " ") + UserAgentSuffix);
+        request.Headers.TryAddWithoutValidation("Date", SystemClock.Default.UtcNow.ToString(dateFormat, CultureInfo.CreateSpecificCulture("en-US")) + " GMT");
         do
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -193,7 +183,7 @@ public class ConfigurableMessageHandler : DelegatingHandler
             lastException = null;
             IEnumerable<IHttpExecuteInterceptor> list1;
             lock (_executeInterceptorsLock)
-                list1 = _executeInterceptors.ToList();
+                list1 = [.. _executeInterceptors];
             foreach (IHttpExecuteInterceptor executeInterceptor in list1)
             {
                 await executeInterceptor.InterceptAsync(request, cancellationToken).ConfigureAwait(false);
@@ -214,7 +204,7 @@ public class ConfigurableMessageHandler : DelegatingHandler
                 var flag1 = false;
                 IEnumerable<IHttpExceptionHandler> list2;
                 lock (_exceptionHandlersLock)
-                    list2 = _exceptionHandlers.ToList();
+                    list2 = [.. _exceptionHandlers];
                 foreach (IHttpExceptionHandler exceptionHandler in list2)
                 {
                     flag = flag1;
@@ -253,11 +243,11 @@ public class ConfigurableMessageHandler : DelegatingHandler
                 var flag1 = false;
                 IEnumerable<IHttpUnsuccessfulResponseHandler> list2;
                 lock (_unsuccessfulResponseHandlersLock)
-                    list2 = _unsuccessfulResponseHandlers.ToList();
+                    list2 = [.. _unsuccessfulResponseHandlers];
                 foreach (IHttpUnsuccessfulResponseHandler unsuccessfulResponseHandler in list2)
                 {
                     flag = flag1;
-                    int num = await unsuccessfulResponseHandler.HandleResponseAsync(new HandleUnsuccessfulResponseArgs(request, response)
+                    var num = await unsuccessfulResponseHandler.HandleResponseAsync(new HandleUnsuccessfulResponseArgs(request, response)
                     {
                         TotalTries = NumTries,
                         CurrentFailedTry = NumTries - triesRemaining,

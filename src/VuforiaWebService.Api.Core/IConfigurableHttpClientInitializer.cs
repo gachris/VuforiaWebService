@@ -8,11 +8,6 @@ namespace VuforiaWebService.Api.Core;
 public interface IConfigurableHttpClientInitializer
 {
     /// <summary>
-    /// Gets the network credential containing user identity information.
-    /// </summary>
-    NetworkCredential NetworkCredential { get; }
-
-    /// <summary>
     /// Initializes a <see cref="ConfigurableHttpClient"/> by configuring its properties.
     /// </summary>
     /// <param name="httpClient">The <see cref="ConfigurableHttpClient"/> instance to be initialized.</param>

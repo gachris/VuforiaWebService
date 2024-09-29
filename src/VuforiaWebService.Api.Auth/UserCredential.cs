@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using VuforiaWebService.Api.Core;
 using VuforiaWebService.Api.Core.Logger;
@@ -18,7 +17,6 @@ public class UserCredential : ICredential, IConfigurableHttpClientInitializer, I
     protected static readonly ILogger Logger = ApplicationContext.Logger.ForType<UserCredential>();
 
     private string _accessToken;
-    private readonly NetworkCredential _networkCredential;
 
     /// <summary>
     /// Gets the access method used for authentication.
@@ -26,23 +24,15 @@ public class UserCredential : ICredential, IConfigurableHttpClientInitializer, I
     public IAccessMethod AccessMethod { get; }
 
     /// <summary>
-    /// Gets the network credential containing user identity information.
-    /// </summary>
-    public NetworkCredential NetworkCredential => _networkCredential;
-
-    /// <summary>
     /// Gets the current access token used for authentication.
     /// </summary>
     public string AccessToken => _accessToken;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserCredential"/> class with specified network credentials.
+    /// Initializes a new instance of the <see cref="UserCredential"/> class.
     /// </summary>
-    /// <param name="networkCredential">The network credentials for the user.</param>
-    public UserCredential(NetworkCredential networkCredential)
+    public UserCredential()
     {
-        _networkCredential = networkCredential;
-
         AccessMethod = new VuforiaWebServiceAuthentication.AuthorizationHeaderAccessMethod();
     }
 

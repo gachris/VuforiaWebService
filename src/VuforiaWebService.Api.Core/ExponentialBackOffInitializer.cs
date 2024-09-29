@@ -8,9 +8,6 @@ namespace VuforiaWebService.Api.Core;
 /// </summary>
 public class ExponentialBackOffInitializer : IConfigurableHttpClientInitializer
 {   
-    /// <inheritdoc/>
-    public NetworkCredential NetworkCredential => throw new NotImplementedException();
-
     /// <summary>
     /// Gets or sets the used back-off policy.
     /// </summary>

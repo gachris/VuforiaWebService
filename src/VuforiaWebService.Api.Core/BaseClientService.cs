@@ -61,7 +61,6 @@ public abstract class BaseClientService : IClientService, IDisposable
         var args = new CreateHttpClientArgs()
         {
             ApplicationName = ApplicationName,
-            NetworkCredential = initializer.HttpClientInitializer.NetworkCredential
         };
         if (HttpClientInitializer != null)
             args.Initializers.Add(HttpClientInitializer);

@@ -1,32 +1,59 @@
-using System.Net;
 using Moq;
 using VuforiaWebService.Api.Auth;
 using VuforiaWebService.Api.Core;
 using VuforiaWebService.Api.Target.Resources;
 using VuforiaWebService.Api.Target.Services;
 using VuforiaWebService.Api.Target.Types;
-using static VuforiaWebService.Api.Target.Resources.TargetListResource;
 
 namespace VuforiaWebService.Tests;
 
 public class VuforiaApiTests
 {
     private Mock<TargetListResource> _mockTargetListResource;
-    private Mock<ListRequest> _mockTargetListRequest;
+    private Mock<TargetListResource.ListRequest> _mockTargetListRequest;
     private Mock<TargetService> _mockTargetService;
     private DatabaseAccessKeys _mockDatabaseAccessKeys;
     private PostTrackableRequest _mockPostTrackableRequest;
 
+    private static void Main1()
+    {
+        //var resource = new TargetListResource(GetService());
+        //var vuforiaGetAllResponse = resource.List(GetKeys()).Execute();
+        //var vuforiaGetDatabaseSummaryReportResponse = resource.GetDatabaseSummaryReport(GetKeys()).Execute();
+
+        //foreach (var item in vuforiaGetAllResponse.Results)
+        //{
+        //    var vuforiaCheckSimilarResponse = resource.CheckSimilar(GetKeys(), item).Execute();
+        //}
+
+        //var vuforiaDeleteResponse = resource.Delete(GetKeys(), "TARGET_ID").Execute();
+        //var vuforiaRetrieveResponse = resource.Get(GetKeys(), "TARGET_ID").Execute();
+        //var vuforiaPostResponse = resource.Insert(GetKeys(), new Api.Target.Types.PostTrackableRequest()).Execute();
+        //var vuforiaRetrieveTargetSummaryReportResponse = resource.RetrieveTargetSummaryReport(GetKeys(), "TARGET_ID").Execute();
+        //var vuforiaUpdateResponse = resource.Update(GetKeys(), new Api.Target.Types.PostTrackableRequest(), "TARGET_ID").Execute();
+    }
+
+    private static TargetService GetService()
+    {
+        var userCredentials = AuthorizationBroker.AuthorizeAsync();
+        return new TargetService(new BaseClientService.Initializer()
+        {
+            ApplicationName = "APPLICATION_NAME",
+            HttpClientInitializer = userCredentials
+        });
+    }
+
     [SetUp]
     public void Setup()
     {
+        Main1();
         // Initialize mocks
         _mockTargetService = new Mock<TargetService>(MockBehavior.Strict);
 
         _mockTargetListResource = new Mock<TargetListResource>(_mockTargetService.Object);
         _mockPostTrackableRequest = new PostTrackableRequest();
 
-        _mockTargetListRequest = new Mock<ListRequest>();
+        _mockTargetListRequest = new Mock<TargetListResource.ListRequest>();
     }
 
     [Test]
