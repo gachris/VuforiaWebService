@@ -21,7 +21,6 @@ internal static class HttpRequestMessageExtenstions
         if (body != null)
         {
             content = service.SerializeObject(body);
-        
         }
 
         request.Content = new StringContent(content, Encoding.UTF8, mediaType);

@@ -15,7 +15,6 @@
 		<Copyright>Copyright © 2024.</Copyright>
 		<PackageId>$(MSBuildProjectName)</PackageId>
 		<PackageTags>vuforia, web service, unity</PackageTags>
-		<PackageIcon>vuforia.logo.png</PackageIcon>
 		<Product>$(MSBuildProjectName)</Product>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/gachris/VuforiaWebService</RepositoryUrl>
@@ -28,16 +27,5 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)SignAssemblyKey.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
-
-	<PropertyGroup Label="Output">
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<None Include="..\..\images\vuforia.logo.png">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
 
 </Project>

@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VuforiaWebService.Tests", "src\VuforiaWebService.Tests\VuforiaWebService.Tests.csproj", "{C870DC84-B76A-4076-ADE5-FDD2C7ED98C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{60234D05-3C3E-48D2-8593-27CD292DCFB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60234D05-3C3E-48D2-8593-27CD292DCFB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60234D05-3C3E-48D2-8593-27CD292DCFB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C870DC84-B76A-4076-ADE5-FDD2C7ED98C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C870DC84-B76A-4076-ADE5-FDD2C7ED98C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C870DC84-B76A-4076-ADE5-FDD2C7ED98C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C870DC84-B76A-4076-ADE5-FDD2C7ED98C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

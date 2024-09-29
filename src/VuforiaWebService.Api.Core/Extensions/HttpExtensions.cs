@@ -5,7 +5,7 @@ namespace VuforiaWebService.Api.Core.Extensions;
 /// <summary>
 /// Extension methods to <see cref="HttpRequestMessage"/> and <see cref="HttpResponseMessage"/>.
 /// </summary>
-internal static class HttpExtenstions
+internal static class HttpExtensions
 {
     /// <summary>
     /// Returns <c>true</c> if the response contains one of the redirect status codes.
