@@ -1,8 +1,8 @@
 using Moq;
 using VuforiaWebService.Api.Core;
 using VuforiaWebService.Api.Core.Response;
-using VuforiaWebService.Api.Target.Tests.Resource;
 using VuforiaWebService.Api.Target.Types;
+using VuforiaWebService.Tests.Resource;
 
 namespace VuforiaWebService.Tests;
 

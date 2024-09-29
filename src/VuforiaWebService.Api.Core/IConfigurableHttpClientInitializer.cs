@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace VuforiaWebService.Api.Core;
+﻿namespace VuforiaWebService.Api.Core;
 
 /// <summary>
 /// An interface for initializing a <see cref="ConfigurableHttpClient"/> after it was created.

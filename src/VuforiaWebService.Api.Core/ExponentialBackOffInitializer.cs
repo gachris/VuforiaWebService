@@ -1,13 +1,11 @@
-﻿using System.Net;
-
-namespace VuforiaWebService.Api.Core;
+﻿namespace VuforiaWebService.Api.Core;
 
 /// <summary>
 /// An initializer which adds exponential back-off as exception handler and \ or unsuccessful response handler by
 /// the given <see cref="ExponentialBackOffPolicy" />.
 /// </summary>
 public class ExponentialBackOffInitializer : IConfigurableHttpClientInitializer
-{   
+{
     /// <summary>
     /// Gets or sets the used back-off policy.
     /// </summary>

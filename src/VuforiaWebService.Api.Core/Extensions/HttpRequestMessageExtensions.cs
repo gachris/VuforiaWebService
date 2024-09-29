@@ -17,7 +17,7 @@ internal static class HttpRequestMessageExtenstions
     {
         var content = string.Empty;
         var mediaType = "application/" + service.Serializer.Format;
-        
+
         if (body != null)
         {
             content = service.SerializeObject(body);

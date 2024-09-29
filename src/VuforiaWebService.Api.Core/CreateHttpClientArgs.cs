@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace VuforiaWebService.Api.Core;
+﻿namespace VuforiaWebService.Api.Core;
 /// <summary>
 /// Arguments for creating a HTTP client.
 /// </summary>

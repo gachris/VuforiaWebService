@@ -2,7 +2,7 @@
 using VuforiaWebService.Api.Target.Services;
 using VuforiaWebService.Api.Target.Types;
 
-namespace VuforiaWebService.Api.Target.Tests.Resource;
+namespace VuforiaWebService.Tests.Resource;
 
 public class TargetListTestResource : ITargetListTestResource
 {

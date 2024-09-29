@@ -1,7 +1,7 @@
 ﻿using VuforiaWebService.Api.Core;
 using VuforiaWebService.Api.Target.Types;
 
-namespace VuforiaWebService.Api.Target.Tests.Resource;
+namespace VuforiaWebService.Tests.Resource;
 
 public interface ITargetListTestResource
 {

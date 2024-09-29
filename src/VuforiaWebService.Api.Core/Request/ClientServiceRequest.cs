@@ -140,7 +140,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
             return await _service.DeserializeResponse<TResponse>(response).ConfigureAwait(false);
         }
         var requestError = await _service.DeserializeError(response).ConfigureAwait(false);
-        throw new VuforiaPortalApiException(_service.Name, requestError.ToString())
+        throw new VuforiaPortalApiException(_service.Name, requestError.ResultCode.ToString())
         {
             Error = requestError,
             HttpStatusCode = response.StatusCode
