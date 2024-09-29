@@ -7,8 +7,16 @@
 	<PropertyGroup Label="Package Configuration">
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Description>The Vuforia Web Services (VWS) API is a RESTful web API that enables developers to use their own Content Management System (CMS) with Vuforia’s Cloud Recognition service and VuMark Generation API</Description>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
-	
+
+	<ItemGroup>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\VuforiaWebService.Api.Core\VuforiaWebService.Api.Core.csproj" />
 	</ItemGroup>
