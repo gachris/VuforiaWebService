@@ -12,15 +12,7 @@ public static class ApplicationContext
     /// <summary>
     /// Gets the logger instance used within this application context. Creates a new <see cref="NullLogger"/> if no logger was registered previously.
     /// </summary>
-    public static ILogger Logger
-    {
-        get
-        {
-            _logger ??= new NullLogger();
-
-            return _logger;
-        }
-    }
+    public static ILogger Logger => _logger ??= new NullLogger();
 
     /// <summary>
     /// Registers a logger with this application context.
