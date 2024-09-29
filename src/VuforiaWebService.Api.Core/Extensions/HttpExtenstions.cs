@@ -1,7 +1,4 @@
-﻿using System.Net;
-using System.Net.Http;
-
-namespace VuforiaWebService.Api.Core.Extensions;
+﻿namespace VuforiaWebService.Api.Core.Extensions;
 
 /// <summary>
 /// Extension methods to <see cref="T:System.Net.Http.HttpRequestMessage" /> and
@@ -12,16 +9,19 @@ public static class HttpExtenstions
     /// <summary>Returns <c>true</c> if the response contains one of the redirect status codes.</summary>
     internal static bool IsRedirectStatusCode(this HttpResponseMessage message)
     {
-        switch (message.StatusCode)
+        return message.StatusCode switch
         {
-            case HttpStatusCode.Moved:
-            case HttpStatusCode.Found:
-            case HttpStatusCode.RedirectMethod:
-            case HttpStatusCode.RedirectKeepVerb:
-                return true;
-            default:
-                return false;
-        }
+            HttpStatusCode.Moved
+ /* Unmerged change from project 'VuforiaWebService.Api.Core (netstandard2.0)'
+ Before:
+             case HttpStatusCode.Found:
+             case HttpStatusCode.RedirectMethod:
+ After:
+             case HttpStatusCode.Found HttpStatusCode.RedirectMethod:
+ */
+ or HttpStatusCode.Found or or HttpStatusCode.RedirectMethod or HttpStatusCode.RedirectKeepVerb => true,
+            _ => false,
+        };
     }
 
     /// <summary>A VuforiaPortal.Apis utility method for setting an empty HTTP content.</summary>

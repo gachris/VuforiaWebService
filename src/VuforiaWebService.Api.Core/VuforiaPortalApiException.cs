@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using VuforiaWebService.Api.Core.Extensions;
 using VuforiaWebService.Api.Core.Types;
 
@@ -32,6 +31,7 @@ public class VuforiaPortalApiException : Exception
 
     /// <summary>The HTTP status code which was returned along with this error, or 0 if unavailable.</summary>
     public HttpStatusCode HttpStatusCode { get; set; }
+    /// <inheritdoc/>
 
     public override string ToString() => string.Format("The service {1} has thrown an exception: {0}", base.ToString(), serviceName);
 }

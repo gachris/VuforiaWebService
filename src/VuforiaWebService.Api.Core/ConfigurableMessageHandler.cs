@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using VuforiaWebService.Api.Core.Extensions;
 using VuforiaWebService.Api.Core.Logger;
 using VuforiaWebService.Api.Core.Utils;
@@ -117,7 +111,7 @@ public class ConfigurableMessageHandler : DelegatingHandler
         get => numTries;
         set
         {
-            if (value > 20 || value < 1)
+            if (value is > 20 or < 1)
                 throw new ArgumentOutOfRangeException(nameof(NumTries));
             numTries = value;
         }
@@ -132,7 +126,7 @@ public class ConfigurableMessageHandler : DelegatingHandler
         get => numRedirects;
         set
         {
-            if (value > 20 || value < 1)
+            if (value is > 20 or < 1)
                 throw new ArgumentOutOfRangeException(nameof(NumRedirects));
             numRedirects = value;
         }

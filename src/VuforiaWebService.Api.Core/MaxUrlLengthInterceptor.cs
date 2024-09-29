@@ -1,8 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Headers;
 
 namespace VuforiaWebService.Api.Core;
 
@@ -22,6 +18,7 @@ public class MaxUrlLengthInterceptor : IHttpExecuteInterceptor
 
     /// <summary>Constructs a new Max URL length interceptor with the given max length.</summary>
     public MaxUrlLengthInterceptor(uint maxUrlLength) => this.maxUrlLength = maxUrlLength;
+    /// <inheritdoc/>
 
     public Task InterceptAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {

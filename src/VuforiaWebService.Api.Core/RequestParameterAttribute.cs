@@ -1,5 +1,4 @@
-﻿using System;
-using VuforiaWebService.Api.Core.Types;
+﻿using VuforiaWebService.Api.Core.Types;
 
 namespace VuforiaWebService.Api.Core;
 

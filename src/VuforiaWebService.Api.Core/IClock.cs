@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace VuforiaWebService.Api.Core;
+﻿namespace VuforiaWebService.Api.Core;
 
 /// <summary>Clock wrapper for getting the current time.</summary>
 public interface IClock

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace VuforiaWebService.Api.Core;
+﻿namespace VuforiaWebService.Api.Core;
 
 /// <summary>Strategy interface to control back-off between retry attempts.</summary>
 public interface IBackOff

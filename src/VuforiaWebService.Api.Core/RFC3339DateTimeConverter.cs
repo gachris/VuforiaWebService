@@ -1,5 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿/* Unmerged change from project 'VuforiaWebService.Api.Core (netstandard2.0)'
+Before:
 using System;
+After:
+using Newtonsoft.Json;
+*/
 using VuforiaWebService.Api.Core.Utils;
 
 namespace VuforiaWebService.Api.Core;

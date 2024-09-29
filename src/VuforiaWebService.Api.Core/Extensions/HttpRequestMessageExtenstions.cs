@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using System.Text;
+﻿using System.Text;
 
 namespace VuforiaWebService.Api.Core.Extensions;
 
@@ -12,9 +11,6 @@ internal static class HttpRequestMessageExtenstions
     /// <param name="request">The request.</param>
     /// <param name="service">The service.</param>
     /// <param name="body">The body of the future request. If <c>null</c> do nothing.</param>
-    /// <param name="gzipEnabled">
-    /// Indicates if the content will be wrapped in a GZip stream, or a regular string stream will be used.
-    /// </param>
     internal static void SetRequestSerailizedContent(this HttpRequestMessage request, IClientService service, object body)
     {
         string content = "";

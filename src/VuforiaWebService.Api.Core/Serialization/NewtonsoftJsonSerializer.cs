@@ -1,6 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿/* Unmerged change from project 'VuforiaWebService.Api.Core (netstandard2.0)'
+Before:
 using System;
 using System.IO;
+After:
+using System.IO;
+using Newtonsoft.Json;
+*/
 
 namespace VuforiaWebService.Api.Core.Serialization;
 
@@ -20,8 +25,10 @@ public class NewtonsoftJsonSerializer : IJsonSerializer, ISerializer
         settings.Converters.Add(new RFC3339DateTimeConverter());
         newtonsoftSerializer = JsonSerializer.Create(settings);
     }
+    /// <inheritdoc/>
 
     public string Format => "json";
+    /// <inheritdoc/>
 
     public void Serialize(object obj, Stream target)
     {
@@ -30,6 +37,7 @@ public class NewtonsoftJsonSerializer : IJsonSerializer, ISerializer
             obj = string.Empty;
         newtonsoftSerializer.Serialize(streamWriter, obj);
     }
+    /// <inheritdoc/>
 
     public string Serialize(object obj)
     {
@@ -39,10 +47,13 @@ public class NewtonsoftJsonSerializer : IJsonSerializer, ISerializer
         newtonsoftSerializer.Serialize(textWriter, obj);
         return textWriter.ToString();
     }
+    /// <inheritdoc/>
 
     public T Deserialize<T>(string input) => string.IsNullOrEmpty(input) ? default : JsonConvert.DeserializeObject<T>(input);
+    /// <inheritdoc/>
 
     public object Deserialize(string input, Type type) => string.IsNullOrEmpty(input) ? null : JsonConvert.DeserializeObject(input, type);
+    /// <inheritdoc/>
 
     public T Deserialize<T>(Stream input)
     {

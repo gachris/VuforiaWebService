@@ -1,8 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading;
-
-namespace VuforiaWebService.Api.Core;
+﻿namespace VuforiaWebService.Api.Core;
 
 /// <summary>Argument class to <see cref="M:VuforiaPortal.Apis.Http.IHttpExceptionHandler.HandleExceptionAsync(VuforiaPortal.Apis.Http.HandleExceptionArgs)" />.</summary>
 public class HandleExceptionArgs

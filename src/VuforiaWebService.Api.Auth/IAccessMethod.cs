@@ -1,10 +1,7 @@
-﻿using System.Net.Http;
-
-namespace VuforiaWebService.Api.Auth;
+﻿namespace VuforiaWebService.Api.Auth;
 
 /// <summary>
-/// Method of presenting the access token to the resource server as specified in
-/// http://tools.ietf.org/html/rfc6749#section-7
+/// Method of presenting the access token to the resource server.
 /// </summary>
 public interface IAccessMethod
 {
@@ -14,7 +11,7 @@ public interface IAccessMethod
     void Intercept(HttpRequestMessage request, string accessToken);
 
     /// <summary>
-    /// Retrieves the original access token in the HTTP request, as provided in the <see cref="M:VuforiaPortal.Apis.Auth.OAuth2.IAccessMethod.Intercept(System.Net.Http.HttpRequestMessage,System.String)" />
+    /// Retrieves the original access token in the HTTP request, as provided in the <see cref="Intercept(HttpRequestMessage,string)" />
     /// method.
     /// </summary>
     string GetAccessToken(HttpRequestMessage request);

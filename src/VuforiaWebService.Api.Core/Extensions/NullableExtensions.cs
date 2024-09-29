@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace VuforiaWebService.Api.Core.Extensions;
+﻿namespace VuforiaWebService.Api.Core.Extensions;
 
 /// <summary>
 /// Provides extension methods for performing argument validation checks.

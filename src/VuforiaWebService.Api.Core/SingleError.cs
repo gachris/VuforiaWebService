@@ -17,6 +17,7 @@ public class SingleError
 
     /// <summary>Location where the error was thrown</summary>
     public string Location { get; set; }
+    /// <inheritdoc/>
 
     public override string ToString() => string.Format("Message[{0}] Location[{1} - {2}] Reason[{3}] Domain[{4}]", Message, Location, LocationType, Reason, Domain);
 }

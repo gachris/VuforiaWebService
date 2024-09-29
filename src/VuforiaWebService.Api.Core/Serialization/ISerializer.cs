@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace VuforiaWebService.Api.Core.Serialization;
+﻿namespace VuforiaWebService.Api.Core.Serialization;
 
 public interface ISerializer
 {

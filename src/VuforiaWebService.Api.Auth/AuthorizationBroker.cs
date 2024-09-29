@@ -2,12 +2,15 @@
 
 namespace VuforiaWebService.Api.Auth;
 
+/// <summary>
+/// Represents an Authorization Broker for handling Basic Authentication.
+/// </summary>
 public class AuthorizationBroker
 {
-    /// <summary>The core logic for asynchronously authorizing the specified user.</summary>
-    /// <param name="networdCredentials">
-    /// The netword credentials which indicate the VuforiaPortal API access your application is requesting.
-    /// </param>
-    /// <returns>User credential.</returns>
-    public static UserCredential AuthorizeAsync(NetworkCredential networdCredentials) => new UserCredential(networdCredentials);
+    /// <summary>
+    /// Authorizes a user asynchronously using Basic Authentication.
+    /// </summary>
+    /// <param name="networkCredentials">The user's network credentials (username and password).</param>
+    /// <returns>The user's credentials upon successful authorization.</returns>
+    public static UserCredential AuthorizeAsync(NetworkCredential networkCredentials) => new UserCredential(networkCredentials);
 }

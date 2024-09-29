@@ -1,26 +1,28 @@
-﻿using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 
 namespace VuforiaWebService.Api.Auth;
 
 /// <summary>
-/// OAuth 2.0 helper for accessing protected resources using the Bearer token as specified in
-/// http://tools.ietf.org/html/rfc6750.
+/// Helper for accessing protected resources using Authentication.
 /// </summary>
 public class VuforiaWebServiceAuthentication
 {
     /// <summary>
-    /// Thread-safe OAuth 2.0 method for accessing protected resources using the Authorization header as specified
-    /// in http://tools.ietf.org/html/rfc6750#section-2.1.
+    /// Method for accessing protected resources using the Authorization header.
     /// </summary>
     public class AuthorizationHeaderAccessMethod : IAccessMethod
     {
         private const string Schema = "VWS";
 
-        public void Intercept(HttpRequestMessage request, string accessToken) => request.Headers.Authorization = new AuthenticationHeaderValue("VWS", accessToken);
+        /// <inheritdoc/>
+        public void Intercept(HttpRequestMessage request, string accessToken) => request.Headers.Authorization = new AuthenticationHeaderValue(Schema, accessToken);
 
-        public string GetAccessToken(HttpRequestMessage request) => request.Headers.Authorization != null && request.Headers.Authorization.Scheme == "VWS"
+        /// <inheritdoc/>
+        public string GetAccessToken(HttpRequestMessage request)
+        {
+            return request.Headers.Authorization != null && request.Headers.Authorization.Scheme == Schema
                 ? request.Headers.Authorization.Parameter
                 : null;
+        }
     }
 }

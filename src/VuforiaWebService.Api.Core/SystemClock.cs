@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace VuforiaWebService.Api.Core;
+﻿namespace VuforiaWebService.Api.Core;
 
 /// <summary>A default clock implementation that wraps the <see cref="P:System.DateTime.Now" /> property.</summary>
 public class SystemClock : IClock
@@ -12,8 +10,10 @@ public class SystemClock : IClock
     protected SystemClock()
     {
     }
+    /// <inheritdoc/>
 
     public DateTime Now => DateTime.Now;
+    /// <inheritdoc/>
 
     public DateTime UtcNow => DateTime.UtcNow;
 }

@@ -1,8 +1,4 @@
-﻿using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace VuforiaWebService.Api.Core;
+﻿namespace VuforiaWebService.Api.Core;
 
 /// <summary>
 /// HTTP request execute interceptor to intercept a <see cref="T:System.Net.Http.HttpRequestMessage" /> before it has

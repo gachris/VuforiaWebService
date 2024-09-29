@@ -1,4 +1,4 @@
-﻿namespace VuforiaWebService.Api.Core.Util;
+﻿namespace VuforiaWebService.Api.Core.Utils;
 
 public class ApiMethodConstants
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Reflection;
+﻿using System.Reflection;
 using VuforiaWebService.Api.Core.Types;
 
 namespace VuforiaWebService.Api.Core.Utils;
@@ -71,8 +67,7 @@ public static class ParameterUtils
     {
         foreach (PropertyInfo property in request.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
         {
-            RequestParameterAttribute parameterAttribute = property.GetCustomAttributes(typeof(RequestParameterAttribute), false).FirstOrDefault() as RequestParameterAttribute;
-            if (parameterAttribute != null)
+            if (property.GetCustomAttributes(typeof(RequestParameterAttribute), false).FirstOrDefault() is RequestParameterAttribute parameterAttribute)
             {
                 string str = parameterAttribute.Name ?? property.Name.ToLower();
                 Type propertyType = property.PropertyType;

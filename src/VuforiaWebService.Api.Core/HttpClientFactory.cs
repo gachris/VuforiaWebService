@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using VuforiaWebService.Api.Core.Logger;
+﻿using VuforiaWebService.Api.Core.Logger;
 
 namespace VuforiaWebService.Api.Core;
 
@@ -8,6 +7,7 @@ public class HttpClientFactory : IHttpClientFactory
 {
     /// <summary>The class logger.</summary>
     private static readonly ILogger Logger = ApplicationContext.Logger.ForType<HttpClientFactory>();
+    /// <inheritdoc/>
 
     public ConfigurableHttpClient CreateHttpClient(CreateHttpClientArgs args)
     {

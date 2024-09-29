@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using VuforiaWebService.Api.Core.Types;
 
 namespace VuforiaWebService.Api.Core;
@@ -15,6 +14,7 @@ public class ExponentialBackOffInitializer : IConfigurableHttpClientInitializer
 
     /// <summary>Gets or sets the back-off handler creation function.</summary>
     private Func<BackOffHandler> CreateBackOff { get; set; }
+    /// <inheritdoc/>
 
     public NetworkCredential NetworkCredential => throw new NotImplementedException();
 
@@ -28,6 +28,7 @@ public class ExponentialBackOffInitializer : IConfigurableHttpClientInitializer
         Policy = policy;
         CreateBackOff = createBackOff;
     }
+    /// <inheritdoc/>
 
     public void Initialize(ConfigurableHttpClient httpClient)
     {
@@ -38,6 +39,7 @@ public class ExponentialBackOffInitializer : IConfigurableHttpClientInitializer
             return;
         httpClient.MessageHandler.AddUnsuccessfulResponseHandler(backOffHandler);
     }
+    /// <inheritdoc/>
 
     public void GenerateAccessToken(IClientService clientService, DatabaseAccessKeys keys, string httpMethod, object body, string requestPath) => throw new NotImplementedException();
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace VuforiaWebService.Api.Core;
+﻿namespace VuforiaWebService.Api.Core;
 
 /// <summary>
 /// Implementation of <see cref="T:VuforiaPortal.Apis.Util.IBackOff" /> that increases the back-off period for each retry attempt using a
@@ -38,11 +36,12 @@ public class ExponentialBackOff : IBackOff
     {
         if (deltaBackOff < TimeSpan.Zero || deltaBackOff > TimeSpan.FromSeconds(1.0))
             throw new ArgumentOutOfRangeException(nameof(deltaBackOff));
-        if (maximumNumOfRetries < 0 || maximumNumOfRetries > 20)
+        if (maximumNumOfRetries is < 0 or > 20)
             throw new ArgumentOutOfRangeException(nameof(deltaBackOff));
         this.deltaBackOff = deltaBackOff;
         maxNumOfRetries = maximumNumOfRetries;
     }
+    /// <inheritdoc/>
 
     public TimeSpan GetNextBackOff(int currentRetry)
     {

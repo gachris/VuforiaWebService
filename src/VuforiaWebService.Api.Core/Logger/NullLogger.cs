@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace VuforiaWebService.Api.Core.Logger;
+﻿namespace VuforiaWebService.Api.Core.Logger;
 
 public class NullLogger : ILogger
 {

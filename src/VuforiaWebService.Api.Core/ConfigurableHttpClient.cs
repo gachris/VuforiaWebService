@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-
-namespace VuforiaWebService.Api.Core;
+﻿namespace VuforiaWebService.Api.Core;
 
 public class ConfigurableHttpClient : HttpClient
 {

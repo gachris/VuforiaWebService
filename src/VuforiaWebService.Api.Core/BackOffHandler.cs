@@ -1,8 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Net;
 using VuforiaWebService.Api.Core.Logger;
 
 namespace VuforiaWebService.Api.Core;
@@ -50,9 +46,11 @@ public class BackOffHandler : IHttpUnsuccessfulResponseHandler, IHttpExceptionHa
         HandleExceptionFunc = initializer.HandleExceptionFunc;
         HandleUnsuccessfulResponseFunc = initializer.HandleUnsuccessfulResponseFunc;
     }
+    /// <inheritdoc/>
 
     public virtual async Task<bool> HandleResponseAsync(HandleUnsuccessfulResponseArgs args) => HandleUnsuccessfulResponseFunc != null && HandleUnsuccessfulResponseFunc(args.Response)
             && await HandleAsync(args.SupportsRetry, args.CurrentFailedTry, args.CancellationToken).ConfigureAwait(false);
+    /// <inheritdoc/>
 
     public virtual async Task<bool> HandleExceptionAsync(HandleExceptionArgs args) => HandleExceptionFunc != null && HandleExceptionFunc(args.Exception)
             && await HandleAsync(args.SupportsRetry, args.CurrentFailedTry, args.CancellationToken).ConfigureAwait(false);
