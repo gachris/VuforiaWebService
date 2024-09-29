@@ -25,12 +25,6 @@ public interface IClientService : IDisposable
     /// <summary>Gets the BaseUri of the service. All request paths should be relative to this URI.</summary>
     string BaseUri { get; }
 
-    /// <summary>Gets the BasePath of the service.</summary>
-    string BasePath { get; }
-
-    /// <summary>Gets the supported features by this service.</summary>
-    IList<string> Features { get; }
-
     /// <summary>Gets the application name to be used in the User-Agent header.</summary>
     string ApplicationName { get; }
 

@@ -1,8 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
 using VuforiaWebService.Api.Core.Extensions;
 using VuforiaWebService.Api.Core.Logger;
 using VuforiaWebService.Api.Core.Serialization;
@@ -102,10 +98,6 @@ public abstract class BaseClientService : IClientService, IDisposable
     public abstract string Name { get; }
 
     public abstract string BaseUri { get; }
-
-    public abstract string BasePath { get; }
-
-    public abstract IList<string> Features { get; }
 
     public virtual void Dispose()
     {

@@ -6,318 +6,371 @@ using VuforiaWebService.Api.Target.Types;
 
 namespace VuforiaWebService.Api.Target.Resources;
 
-/// <summary>The "calendarList" collection of methods.</summary>
+/// <summary>
+/// Represents a resource on Vuforia web service for accessing targets.
+/// </summary>
 public class TargetListResource
 {
-    private const string Resource = "targetList";
-
-    /// <summary>The service which this resource belongs to.</summary>
     private readonly IClientService _service;
 
-    /// <summary>Constructs a new resource.</summary>
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TargetListResource"/> class.
+    /// </summary>
+    /// <param name="service">The client service used for making requests.</param>
     public TargetListResource(IClientService service) => _service = service;
 
-    /// <summary>Removes a target from the user's target list.</summary>
-    /// <param name="targetId">target identifier. To retrieve target IDs call the targetList.list method. If you
-    /// want to access the primary target of the currently logged in user, use the "primary" keyword.</param>
-    public virtual DeleteRequest Delete(DatabaseAccessKeys keys, string targetId) => new DeleteRequest(_service, keys, targetId);
-
-    /// <summary>Returns a target from the user's target list.</summary>
-    /// <param name="targetId">target identifier. To retrieve target IDs call the targetList.list method. If you
-    /// want to access the primary target of the currently logged in user, use the "primary" keyword.</param>
-    public virtual GetRequest Get(DatabaseAccessKeys keys, string targetId) => new GetRequest(_service, keys, targetId);
-
-    /// <summary>Inserts an existing target into the user's target list.</summary>
-    /// <param name="body">The body of the request.</param>
-    public virtual InsertRequest Insert(DatabaseAccessKeys keys, PostTrackableRequest body) => new InsertRequest(_service, keys, body);
-
-    /// <summary>Returns the targets on the user's targets list.</summary>
+    /// <summary>
+    /// Creates a new <see cref="ListRequest"/> instance for retrieving the list of targets.
+    /// </summary>
+    /// <param name="keys">The database access keys required for authorization.</param>
+    /// <returns>A new <see cref="ListRequest"/> instance for retrieving the list of targets.</returns>
     public virtual ListRequest List(DatabaseAccessKeys keys) => new ListRequest(_service, keys);
 
-    /// <summary>Updates an existing target on the user's target list.</summary>
-    /// <param name="body">The body of the request.</param>
-    /// <param name="targetId">Target identifier. To retrieve target IDs call the targetList.list method. If you
-    /// want to access the primary target of the currently logged in user, use the "primary" keyword.</param>
+    /// <summary>
+    /// Creates a new <see cref="GetRequest"/> instance for retrieving a specific target by ID.
+    /// </summary>
+    /// <param name="keys">The database access keys required for authorization.</param>
+    /// <param name="targetId">The ID of the target to get. To retrieve target IDs, call the <see cref="List"/> method.</param>
+    /// <returns>A new <see cref="GetRequest"/> instance for retrieving a specific target by ID.</returns>
+    public virtual GetRequest Get(DatabaseAccessKeys keys, string targetId) => new GetRequest(_service, keys, targetId);
+
+    /// <summary>
+    /// Creates a new <see cref="InsertRequest"/> instance that can insert a new target.
+    /// </summary>
+    /// <param name="keys">The database access keys required for authorization.</param>
+    /// <param name="body">The target to insert.</param>
+    /// <returns>A new <see cref="InsertRequest"/> instance that can insert a new target.</returns>
+    public virtual InsertRequest Insert(DatabaseAccessKeys keys, PostTrackableRequest body) => new InsertRequest(_service, keys, body);
+
+    /// <summary>
+    /// Creates a new <see cref="UpdateRequest"/> instance that can update an existing target.
+    /// </summary>
+    /// <param name="keys">The database access keys required for authorization.</param>
+    /// <param name="body">The body of the request containing the updated target information.</param>
+    /// <param name="targetId">The ID of the target to update. To retrieve target IDs, call the <see cref="List"/> method.</param>
+    /// <returns>A new <see cref="UpdateRequest"/> instance that can update an existing target.</returns>
     public virtual UpdateRequest Update(DatabaseAccessKeys keys, PostTrackableRequest body, string targetId) => new UpdateRequest(_service, keys, body, targetId);
 
+    /// <summary>
+    /// Creates a new <see cref="DeleteRequest"/> instance that can delete an existing target by ID.
+    /// </summary>
+    /// <param name="keys">The database access keys required for authorization.</param>
+    /// <param name="targetId">The ID of the target to delete. To retrieve target IDs, call the <see cref="List"/> method.</param>
+    /// <returns>A new <see cref="DeleteRequest"/> instance that can delete an existing target by ID.</returns>
+    public virtual DeleteRequest Delete(DatabaseAccessKeys keys, string targetId) => new DeleteRequest(_service, keys, targetId);
+
+    /// <summary>
+    /// Creates a new <see cref="CheckSimilarRequest"/> instance that can check for similar targets.
+    /// </summary>
+    /// <param name="keys">The database access keys required for authorization.</param>
+    /// <param name="targetId">The ID of the target to check for similarity. To retrieve target IDs, call the <see cref="List"/> method.</param>
+    /// <returns>A new <see cref="CheckSimilarRequest"/> instance for checking similar targets.</returns>
     public virtual CheckSimilarRequest CheckSimilar(DatabaseAccessKeys keys, string targetId) => new CheckSimilarRequest(_service, keys, targetId);
 
+    /// <summary>
+    /// Creates a new <see cref="RetrieveTargetSummaryReportRequest"/> instance to retrieve a target's summary report.
+    /// </summary>
+    /// <param name="keys">The database access keys required for authorization.</param>
+    /// <param name="targetId">The ID of the target to retrieve the summary report for. To retrieve target IDs, call the <see cref="List"/> method.</param>
+    /// <returns>A new <see cref="RetrieveTargetSummaryReportRequest"/> instance to retrieve a target's summary report.</returns>
     public virtual RetrieveTargetSummaryReportRequest RetrieveTargetSummaryReport(DatabaseAccessKeys keys, string targetId) => new RetrieveTargetSummaryReportRequest(_service, keys, targetId);
 
+    /// <summary>
+    /// Creates a new <see cref="GetDatabaseSummaryReportRequest"/> instance to retrieve the database summary report.
+    /// </summary>
+    /// <param name="keys">The database access keys required for authorization.</param>
+    /// <returns>A new <see cref="GetDatabaseSummaryReportRequest"/> instance for retrieving the database summary report.</returns>
     public virtual GetDatabaseSummaryReportRequest GetDatabaseSummaryReport(DatabaseAccessKeys keys) => new GetDatabaseSummaryReportRequest(_service, keys);
 
+    /// <summary>
+    /// Represents a request to get the database summary report from the Vuforia web service.
+    /// </summary>
     public class GetDatabaseSummaryReportRequest : TargetBaseServiceRequest<VuforiaGetDatabaseSummaryReportResponse>
     {
-        /// <summary>Constructs a new Delete request.</summary>
-        public GetDatabaseSummaryReportRequest(IClientService service, DatabaseAccessKeys keys) : base(service, keys) => InitParameters();
+        /// <summary>
+        /// Constructs a new <see cref="GetDatabaseSummaryReportRequest"/> instance.
+        /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
+        /// <param name="keys">The database access keys required for authorization.</param>
+        public GetDatabaseSummaryReportRequest(IClientService service, DatabaseAccessKeys keys) : base(service, keys)
+        {
+        }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "summary";
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => ApiMethodConstants.GET;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "/summary";
-
-        /// <summary>Initializes Delete parameter list.</summary>
-        protected override void InitParameters() => base.InitParameters();
     }
 
+    /// <summary>
+    /// Represents a request to retrieve a target's summary report from the Vuforia web service.
+    /// </summary>
     public class RetrieveTargetSummaryReportRequest : TargetBaseServiceRequest<VuforiaRetrieveTargetSummaryReportResponse>
     {
-        /// <summary>Constructs a new Delete request.</summary>
+        /// <summary>
+        /// Constructs a new <see cref="RetrieveTargetSummaryReportRequest"/> instance.
+        /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
+        /// <param name="keys">The database access keys required for authorization.</param>
+        /// <param name="targetId">The ID of the target to retrieve the summary report for. To retrieve target IDs, call the <see cref="List"/> method.</param>
         public RetrieveTargetSummaryReportRequest(IClientService service, DatabaseAccessKeys keys, string targetId) : base(service, keys)
         {
             TargetId = targetId;
-            InitParameters();
         }
 
-        /// <summary>target identifier. To retrieve target IDs call the targetList.list method. If you want to
-        /// access the primary target of the currently logged in user, use the "primary" keyword.</summary>
+        /// <summary>
+        /// Gets the target ID.
+        /// </summary>
         [RequestParameter("targetId", RequestParameterType.Path)]
-        public virtual string TargetId { get; private set; }
+        public virtual string TargetId { get; }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "summary";
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => ApiMethodConstants.GET;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "/summary/{targetId}";
 
-        /// <summary>Initializes Delete parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
 
-            RequestParameters.Add(
-                "targetId", new Parameter
-                {
-                    Name = "targetId",
-                    IsRequired = true,
-                    ParameterType = "path",
-                    DefaultValue = null,
-                    Pattern = null,
-                });
+            RequestParameters.Add("targetId", new Parameter("targetId", "path", true));
         }
     }
 
+    /// <summary>
+    /// Represents a request to check for similar targets in the Vuforia web service.
+    /// </summary>
     public class CheckSimilarRequest : TargetBaseServiceRequest<VuforiaCheckSimilarResponse>
     {
-        /// <summary>Constructs a new Delete request.</summary>
+        /// <summary>
+        /// Constructs a new <see cref="CheckSimilarRequest"/> instance.
+        /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
+        /// <param name="keys">The database access keys required for authorization.</param>
+        /// <param name="targetId">The ID of the target to check for similarity. To retrieve target IDs, call the <see cref="List"/> method.</param>
         public CheckSimilarRequest(IClientService service, DatabaseAccessKeys keys, string targetId) : base(service, keys)
         {
             TargetId = targetId;
-            InitParameters();
         }
 
-        /// <summary>target identifier. To retrieve target IDs call the targetList.list method. If you want to
-        /// access the primary target of the currently logged in user, use the "primary" keyword.</summary>
+        /// <summary>
+        /// Gets the target ID.
+        /// </summary>
         [RequestParameter("targetId", RequestParameterType.Path)]
-        public virtual string TargetId { get; private set; }
+        public virtual string TargetId { get; }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "duplicates";
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => ApiMethodConstants.GET;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "/duplicates/{targetId}";
 
-        /// <summary>Initializes Delete parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
 
-            RequestParameters.Add(
-                "targetId", new Parameter
-                {
-                    Name = "targetId",
-                    IsRequired = true,
-                    ParameterType = "path",
-                    DefaultValue = null,
-                    Pattern = null,
-                });
+            RequestParameters.Add("targetId", new Parameter("targetId", "path", true));
         }
     }
 
-    /// <summary>Removes a target from the user's target list.</summary>
+    /// <summary>
+    /// Represents a request to delete a target by ID from the Vuforia web service.
+    /// </summary>
     public class DeleteRequest : TargetBaseServiceRequest<VuforiaDeleteResponse>
     {
-        /// <summary>Constructs a new Delete request.</summary>
+        /// <summary>
+        /// Constructs a new <see cref="DeleteRequest"/> instance.
+        /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
+        /// <param name="keys">The database access keys required for authorization.</param>
+        /// <param name="targetId">The ID of the target to delete. To retrieve target IDs, call the <see cref="List"/> method.</param>
         public DeleteRequest(IClientService service, DatabaseAccessKeys keys, string targetId) : base(service, keys)
         {
             TargetId = targetId;
-            InitParameters();
         }
 
-        /// <summary>target identifier. To retrieve target IDs call the targetList.list method. If you want to
-        /// access the primary target of the currently logged in user, use the "primary" keyword.</summary>
+        /// <summary>
+        /// Gets the target ID.
+        /// </summary>
         [RequestParameter("targetId", RequestParameterType.Path)]
-        public virtual string TargetId { get; private set; }
+        public virtual string TargetId { get; }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "delete";
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => ApiMethodConstants.DELETE;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "/targets/{targetId}";
 
-        /// <summary>Initializes Delete parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
 
-            RequestParameters.Add(
-                "targetId", new Parameter
-                {
-                    Name = "targetId",
-                    IsRequired = true,
-                    ParameterType = "path",
-                    DefaultValue = null,
-                    Pattern = null,
-                });
+            RequestParameters.Add("targetId", new Parameter("targetId", "path", true));
         }
     }
 
-    /// <summary>Returns a target from the user's target list.</summary>
+    /// <summary>
+    /// Represents a request to retrieve a specific target by ID from the Vuforia web service.
+    /// </summary>
     public class GetRequest : TargetBaseServiceRequest<VuforiaRetrieveResponse>
     {
-        /// <summary>Constructs a new Get request.</summary>
+        /// <summary>
+        /// Constructs a new <see cref="GetRequest"/> instance.
+        /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
+        /// <param name="keys">The database access keys required for authorization.</param>
+        /// <param name="targetId">The ID of the target to get. To retrieve target IDs, call the <see cref="List"/> method.</param>
         public GetRequest(IClientService service, DatabaseAccessKeys keys, string targetId) : base(service, keys)
         {
             TargetId = targetId;
-            InitParameters();
         }
 
-        /// <summary>target identifier. To retrieve target IDs call the targetList.list method. If you want to
-        /// access the primary target of the currently logged in user, use the "primary" keyword.</summary>
+        /// <summary>
+        /// Gets the target ID.
+        /// </summary>
         [RequestParameter("targetId", RequestParameterType.Path)]
-        public virtual string TargetId { get; private set; }
+        public virtual string TargetId { get; }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "get";
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => ApiMethodConstants.GET;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "/targets/{targetId}";
 
-        /// <summary>Initializes Get parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
 
-            RequestParameters.Add("targetId", new Parameter
-            {
-                Name = "targetId",
-                IsRequired = true,
-                ParameterType = "path",
-                DefaultValue = null,
-                Pattern = null,
-            });
+            RequestParameters.Add("targetId", new Parameter("targetId", "path", true));
         }
     }
 
-    /// <summary>Inserts an existing target into the user's target list.</summary>
+    /// <summary>
+    /// Represents a request to insert a new target into the Vuforia web service.
+    /// </summary>
     public class InsertRequest : TargetBaseServiceRequest<VuforiaPostResponse>
     {
-        /// <summary>Constructs a new Insert request.</summary>
+        /// <summary>
+        /// Constructs a new <see cref="InsertRequest"/> instance.
+        /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
+        /// <param name="keys">The database access keys required for authorization.</param>
+        /// <param name="body">The target to insert.</param>
         public InsertRequest(IClientService service, DatabaseAccessKeys keys, PostTrackableRequest body) : base(service, keys)
         {
             Body = body;
-            InitParameters();
         }
 
-        /// <summary>Gets or sets the body of this request.</summary>
-        private PostTrackableRequest Body { get; set; }
+        /// <summary>
+        /// Gets the body of the request containing the target to insert.
+        /// </summary>
+        private PostTrackableRequest Body { get; }
 
-        ///<summary>Returns the body of the request.</summary>
-        protected override object GetBody() => Body;
-
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "insert";
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => ApiMethodConstants.POST;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "/targets";
 
-        /// <summary>Initializes Insert parameter list.</summary>
-        protected override void InitParameters() => base.InitParameters();
+        /// <inheritdoc/>
+        protected override object GetBody() => Body;
     }
 
-    /// <summary>Returns the calendars on the user's calendar list.</summary>
+    /// <summary>
+    /// Represents a request to retrieve a list of targets from the Vuforia web service.
+    /// </summary>
     public class ListRequest : TargetBaseServiceRequest<VuforiaGetAllResponse>
     {
-        /// <summary>Constructs a new List request.</summary>
-        public ListRequest(IClientService service, DatabaseAccessKeys keys) : base(service, keys) => InitParameters();
+        /// <summary>
+        /// Constructs a new <see cref="ListRequest"/> instance.
+        /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
+        /// <param name="keys">The database access keys required for authorization.</param>
+        public ListRequest(IClientService service, DatabaseAccessKeys keys) : base(service, keys)
+        {
+        }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "list";
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => ApiMethodConstants.GET;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "/targets";
-
-        /// <summary>Initializes List parameter list.</summary>
-        protected override void InitParameters() => base.InitParameters();
     }
 
-    /// <summary>Updates an existing target on the user's target list.</summary>
+    /// <summary>
+    /// Represents a request to update an existing target in the Vuforia web service.
+    /// </summary> 
     public class UpdateRequest : TargetBaseServiceRequest<VuforiaUpdateResponse>
     {
-        /// <summary>Constructs a new Update request.</summary>
+        /// <summary>
+        /// Constructs a new <see cref="UpdateRequest"/> instance.
+        /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
+        /// <param name="keys">The database access keys required for authorization.</param>
+        /// <param name="body">The body of the request containing the updated target information.</param>
+        /// <param name="targetId">The ID of the target to update. To retrieve target IDs, call the <see cref="List"/> method.</param>
         public UpdateRequest(IClientService service, DatabaseAccessKeys keys, PostTrackableRequest body, string targetId) : base(service, keys)
         {
             TargetId = targetId;
             Body = body;
-            InitParameters();
         }
 
-        /// <summary>Target identifier. To retrieve target IDs call the targetList.list method. If you want to
-        /// access the primary target of the currently logged in user, use the "primary" keyword.</summary>
+        /// <summary>
+        /// Gets the target ID.
+        /// </summary>
         [RequestParameter("targetId", RequestParameterType.Path)]
-        public virtual string TargetId { get; private set; }
+        public virtual string TargetId { get; }
 
-        /// <summary>Gets or sets the body of this request.</summary>
-        private PostTrackableRequest Body { get; set; }
+        /// <summary>
+        /// Gets the body of the request containing the updated target information.
+        /// </summary>
+        private PostTrackableRequest Body { get; }
 
-        ///<summary>Returns the body of the request.</summary>
-        protected override object GetBody() => Body;
-
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "update";
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => ApiMethodConstants.PUT;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "/targets/{targetId}";
 
-        /// <summary>Initializes Update parameter list.</summary>
+        /// <inheritdoc/>
+        protected override object GetBody() => Body;
+
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
 
-            RequestParameters.Add(
-                "targetId", new Parameter
-                {
-                    Name = "targetId",
-                    IsRequired = true,
-                    ParameterType = "path",
-                    DefaultValue = null,
-                    Pattern = null,
-                });
+            RequestParameters.Add("targetId", new Parameter("targetId", "path", true));
         }
     }
 }
