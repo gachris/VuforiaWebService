@@ -4,6 +4,11 @@
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net8</TargetFramework>
 		<Nullable>enable</Nullable>
+		<AssemblyName>vuforia</AssemblyName>
+		<PublishSingleFile>true</PublishSingleFile>
+		<PublishTrimmed>false</PublishTrimmed>
+		<DebugType>none</DebugType>
+		<GenerateDocumentation>false</GenerateDocumentation>
 	</PropertyGroup>
 
 	<ItemGroup>
