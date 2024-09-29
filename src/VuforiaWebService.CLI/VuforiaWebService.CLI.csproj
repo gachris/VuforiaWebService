@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8</TargetFramework>
+		<Nullable>enable</Nullable>
+		<AssemblyName>vuforia</AssemblyName>
+		<PublishSingleFile>true</PublishSingleFile>
+		<PublishTrimmed>false</PublishTrimmed>
+		<DebugType>none</DebugType>
+		<GenerateDocumentation>false</GenerateDocumentation>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="System.CommandLine.NamingConventionBinder" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\VuforiaWebService.Api.Target\VuforiaWebService.Api.Target.csproj" />
+	</ItemGroup>
+
+</Project>
