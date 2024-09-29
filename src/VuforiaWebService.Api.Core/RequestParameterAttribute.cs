@@ -1,6 +1,4 @@
-﻿using VuforiaWebService.Api.Core.Types;
-
-namespace VuforiaWebService.Api.Core;
+﻿namespace VuforiaWebService.Api.Core;
 
 /// <summary>
 /// An attribute which is used to specially mark a property for reflective purposes,
@@ -10,26 +8,26 @@ namespace VuforiaWebService.Api.Core;
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
 public class RequestParameterAttribute : Attribute
 {
-    private readonly string name;
-    private readonly RequestParameterType type;
+    /// <summary>
+    /// Gets the name of the parameter.
+    /// </summary>
+    public string Name { get; }
 
-    /// <summary>Gets the name of the parameter.</summary>
-    public string Name => name;
-
-    /// <summary>Gets the type of the parameter, Path or Query.</summary>
-    public RequestParameterType Type => type;
+    /// <summary>
+    /// Gets the type of the parameter, Path or Query.
+    /// </summary>
+    public RequestParameterType Type { get; }
 
     /// <summary>
     /// Constructs a new property attribute to be a part of a REST URI.
-    /// This constructor uses <see cref="F:VuforiaPortal.Apis.Util.RequestParameterType.Query" /> as the parameter's type.
+    /// This constructor uses <see cref="RequestParameterType.Query" /> as the parameter's type.
     /// </summary>
     /// <param name="name">
     /// The name of the parameter. If the parameter is a path parameter this name will be used to substitute the
     /// string value into the path, replacing {name}. If the parameter is a query parameter, this parameter will be
     /// added to the query string, in the format "name=value".
     /// </param>
-    public RequestParameterAttribute(string name)
-      : this(name, RequestParameterType.Query)
+    public RequestParameterAttribute(string name) : this(name, RequestParameterType.Query)
     {
     }
 
@@ -42,7 +40,7 @@ public class RequestParameterAttribute : Attribute
     /// <param name="type">The type of the parameter, either Path or Query.</param>
     public RequestParameterAttribute(string name, RequestParameterType type)
     {
-        this.name = name;
-        this.type = type;
+        Name = name;
+        Type = type;
     }
 }

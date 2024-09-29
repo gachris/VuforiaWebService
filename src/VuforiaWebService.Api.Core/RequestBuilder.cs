@@ -2,18 +2,26 @@
 using System.Text.RegularExpressions;
 using VuforiaWebService.Api.Core.Extensions;
 using VuforiaWebService.Api.Core.Logger;
-using VuforiaWebService.Api.Core.Types;
+using VuforiaWebService.Api.Core.Utils;
 
 namespace VuforiaWebService.Api.Core;
 
-/// <summary>Utility class for building a URI using <see cref="M:VuforiaPortal.Apis.Requests.RequestBuilder.BuildUri" /> or a HTTP request using
-/// <see cref="M:VuforiaPortal.Apis.Requests.RequestBuilder.CreateRequest" /> from the query and path parameters of a REST call.</summary>
+/// <summary>
+/// Utility class for building a URI using <see cref="BuildUri" /> or a HTTP request using
+/// <see cref="CreateRequest" /> from the query and path parameters of a REST call.
+/// </summary>
 public class RequestBuilder
 {
     private static readonly ILogger Logger = ApplicationContext.Logger.ForType<RequestBuilder>();
-    /// <summary>Pattern to get the groups that are part of the path.</summary>
+
+    /// <summary>
+    /// Pattern to get the groups that are part of the path.
+    /// </summary>
     private static readonly Regex PathParametersPattern = new Regex("{[^{}]*}*");
-    /// <summary>Supported HTTP methods.</summary>
+
+    /// <summary>
+    /// Supported HTTP methods.
+    /// </summary>
     private static readonly IEnumerable<string> SupportedMethods = new List<string>()
     {
         "GET",
@@ -21,9 +29,15 @@ public class RequestBuilder
         "PUT",
         "DELETE"
     };
-    /// <summary>The HTTP method used for this request.</summary>
-    private string method;
-    /// <summary>Operator list that can appear in the path argument.</summary>
+
+    /// <summary>
+    /// The HTTP method used for this request.
+    /// </summary>
+    private string _method = Constants.Get;
+
+    /// <summary>
+    /// Operator list that can appear in the path argument.
+    /// </summary>
     private const string OPERATORS = "+#./;?&|!@=";
 
     /// <summary>
@@ -38,45 +52,51 @@ public class RequestBuilder
     /// </summary>
     private List<KeyValuePair<string, string>> QueryParameters { get; set; }
 
-    /// <summary>The base URI for this request (usually applies to the service itself).</summary>
-    public Uri BaseUri { get; set; }
+    /// <summary>
+    /// The base URI for this request (usually applies to the service itself).
+    /// </summary>
+    public Uri BaseUri { get; }
 
     /// <summary>
-    /// The path portion of this request. It's appended to the <see cref="P:VuforiaPortal.Apis.Requests.RequestBuilder.BaseUri" /> and the parameters are
-    /// substituted from the <see cref="P:VuforiaPortal.Apis.Requests.RequestBuilder.PathParameters" /> dictionary.
+    /// The path portion of this request. It's appended to the <see cref="BaseUri" /> and the parameters are
+    /// substituted from the <see cref="PathParameters" /> dictionary.
     /// </summary>
-    public string Path { get; set; }
+    public string Path { get; }
 
-    /// <summary>The HTTP method used for this request (such as GET, PUT, POST, etc...).</summary>
-    /// <remarks>The default Value is <see cref="F:VuforiaPortal.Apis.Http.HttpConsts.Get" />.</remarks>
+    /// <summary>
+    /// The HTTP method used for this request (such as GET, PUT, POST, etc...).
+    /// </summary>
+    /// <remarks>The default Value is <see cref="Constants.Get" />.</remarks>
     public string Method
     {
-        get => method;
-        set
+        get => _method;
+        private set
         {
             if (!SupportedMethods.Contains(value))
                 throw new ArgumentOutOfRangeException(nameof(Method));
-            method = value;
+            _method = value;
         }
     }
 
     /// <summary>Construct a new request builder.</summary>
-    ///  
-    ///             TODO(peleyal): Consider using the Factory pattern here.
-    public RequestBuilder()
+    public RequestBuilder(Uri baseUri, string path, string method)
     {
+        BaseUri = baseUri;
+        Path = path;
+        Method = method;
         PathParameters = new Dictionary<string, IList<string>>();
-        QueryParameters = new List<KeyValuePair<string, string>>();
-        Method = "GET";
+        QueryParameters = [];
     }
 
-    /// <summary>Constructs a Uri as defined by the parts of this request builder.</summary>
+    /// <summary>
+    /// Constructs a Uri as defined by the parts of this request builder.
+    /// </summary>
     public Uri BuildUri()
     {
-        StringBuilder stringBuilder = BuildRestPath();
+        var stringBuilder = BuildRestPath();
         if (QueryParameters.Count > 0)
         {
-            stringBuilder.Append(stringBuilder.ToString().Contains("?") ? "&" : "?");
+            stringBuilder.Append(stringBuilder.ToString().Contains('?') ? "&" : "?");
             stringBuilder.Append(string.Join("&", QueryParameters.Select(x =>
             {
                 return string.IsNullOrEmpty(x.Value)
@@ -88,119 +108,146 @@ public class RequestBuilder
     }
 
     /// <summary>
-    /// Builds the REST path string builder based on <see cref="P:VuforiaPortal.Apis.Requests.RequestBuilder.PathParameters" /> and the URI template spec
-    /// http://tools.ietf.org/html/rfc6570.
+    /// Builds the REST path string builder based on <see cref="PathParameters" />.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The REST path.</returns>
     private StringBuilder BuildRestPath()
     {
         if (string.IsNullOrEmpty(Path))
-            return new StringBuilder(string.Empty);
-        StringBuilder stringBuilder1 = new StringBuilder(Path);
-        foreach (object match in PathParametersPattern.Matches(stringBuilder1.ToString()))
         {
-            string oldValue = match.ToString();
-            string str1 = oldValue.Substring(1, oldValue.Length - 2);
-            string empty = string.Empty;
-            if ("+#./;?&|!@=".Contains(str1[0].ToString()))
+            return new StringBuilder(string.Empty);
+        }
+
+        StringBuilder stringBuilder = new StringBuilder(Path);
+        foreach (object item in PathParametersPattern.Matches(stringBuilder.ToString()))
+        {
+            string text = item.ToString();
+            string text2 = text.Substring(1, text.Length - 2);
+            string text3 = string.Empty;
+            if (OPERATORS.Contains(text2[0].ToString()))
             {
-                empty = str1[0].ToString();
-                str1 = str1.Substring(1);
+                text3 = text2[0].ToString();
+                text2 = text2.Substring(1);
             }
+
             StringBuilder stringBuilder2 = new StringBuilder();
-            string[] strArray = str1.Split(',');
-            for (int index = 0; index < strArray.Length; ++index)
+            string[] array = text2.Split(new char[1] { ',' });
+            for (int i = 0; i < array.Length; i++)
             {
-                string key = strArray[index];
+                string text4 = array[i];
                 bool flag = false;
                 int result = 0;
-                if (key[key.Length - 1] == '*')
+                if (text4[text4.Length - 1] == '*')
                 {
                     flag = true;
-                    key = key.Substring(0, key.Length - 1);
+                    text4 = text4.Substring(0, text4.Length - 1);
                 }
-                if (key.Contains(":"))
+
+                if (text4.Contains(":"))
                 {
-                    if (!int.TryParse(key.Substring(key.IndexOf(":") + 1), out result))
-                        throw new ArgumentException(string.Format("Can't parse number after ':' in Path \"{0}\". Parameter is \"{1}\"", Path, key), Path);
-                    key = key.Substring(0, key.IndexOf(":"));
+                    if (!int.TryParse(text4.Substring(text4.IndexOf(":") + 1), out result))
+                    {
+                        throw new ArgumentException($"Can't parse number after ':' in Path \"{Path}\". Parameter is \"{text4}\"", Path);
+                    }
+
+                    text4 = text4.Substring(0, text4.IndexOf(":"));
                 }
-                string separator = empty;
-                string str2 = empty;
-                switch (empty)
+
+                string separator = text3;
+                string text5 = text3;
+                switch (text3)
                 {
-                    case "#":
-                        str2 = index == 0 ? "#" : ",";
-                        separator = ",";
-                        break;
-                    case "&":
-                    case ";":
-                        str2 = empty + key + "=";
-                        separator = ",";
-                        if (flag)
-                        {
-                            separator = empty + key + "=";
-                            break;
-                        }
-                        break;
                     case "+":
-                        str2 = index == 0 ? "" : ",";
+                        text5 = ((i == 0) ? "" : ",");
                         separator = ",";
                         break;
                     case ".":
                         if (!flag)
                         {
                             separator = ",";
-                            break;
                         }
+
                         break;
                     case "/":
                         if (!flag)
                         {
                             separator = ",";
-                            break;
                         }
+
+                        break;
+                    case "#":
+                        text5 = ((i == 0) ? "#" : ",");
+                        separator = ",";
                         break;
                     case "?":
-                        str2 = (index == 0 ? "?" : "&") + key + "=";
+                        text5 = ((i == 0) ? "?" : "&") + text4 + "=";
                         separator = ",";
                         if (flag)
                         {
-                            separator = "&" + key + "=";
-                            break;
+                            separator = "&" + text4 + "=";
                         }
+
+                        break;
+                    case "&":
+                    case ";":
+                        text5 = text3 + text4 + "=";
+                        separator = ",";
+                        if (flag)
+                        {
+                            separator = text3 + text4 + "=";
+                        }
+
                         break;
                     default:
-                        if (index > 0)
-                            str2 = ",";
+                        if (i > 0)
+                        {
+                            text5 = ",";
+                        }
+
                         separator = ",";
                         break;
                 }
-                if (PathParameters.ContainsKey(key))
+
+                if (PathParameters.ContainsKey(text4))
                 {
-                    string stringToEscape = string.Join(separator, PathParameters[key]);
-                    if (result != 0 && result < stringToEscape.Length)
-                        stringToEscape = stringToEscape.Substring(0, result);
-                    if (empty != "+" && empty != "#" && PathParameters[key].Count == 1)
-                        stringToEscape = Uri.EscapeDataString(stringToEscape);
-                    string str3 = str2 + stringToEscape;
-                    stringBuilder2.Append(str3);
+                    string text6 = string.Join(separator, PathParameters[text4]);
+                    if (result != 0 && result < text6.Length)
+                    {
+                        text6 = text6.Substring(0, result);
+                    }
+
+                    if (text3 != "+" && text3 != "#" && PathParameters[text4].Count == 1)
+                    {
+                        text6 = Uri.EscapeDataString(text6);
+                    }
+
+                    text6 = text5 + text6;
+                    stringBuilder2.Append(text6);
+                    continue;
                 }
-                else
-                    throw new ArgumentException(string.Format("Path \"{0}\" misses a \"{1}\" parameter", Path, key), Path);
+
+                throw new ArgumentException($"Path \"{Path}\" misses a \"{text4}\" parameter", Path);
             }
-            if (empty == ";")
+
+            if (text3 == ";")
             {
                 if (stringBuilder2[stringBuilder2.Length - 1] == '=')
+                {
                     stringBuilder2 = stringBuilder2.Remove(stringBuilder2.Length - 1, 1);
+                }
+
                 stringBuilder2 = stringBuilder2.Replace("=;", ";");
             }
-            stringBuilder1 = stringBuilder1.Replace(oldValue, stringBuilder2.ToString());
+
+            stringBuilder = stringBuilder.Replace(text, stringBuilder2.ToString());
         }
-        return stringBuilder1;
+
+        return stringBuilder;
     }
 
-    /// <summary>Adds a parameter value.</summary>
+    /// <summary>
+    /// Adds a parameter value.
+    /// </summary>
     /// <param name="type">Type of the parameter (must be 'Path' or 'Query').</param>
     /// <param name="name">Parameter name.</param>
     /// <param name="value">Parameter value.</param>
@@ -216,14 +263,13 @@ public class RequestBuilder
             QueryParameters.Add(new KeyValuePair<string, string>(name, value));
         }
         else if (!PathParameters.ContainsKey(name))
-            PathParameters[name] = new List<string>()
-    {
-      value
-    };
+            PathParameters[name] = new List<string>() { value };
         else
             PathParameters[name].Add(value);
     }
 
-    /// <summary>Creates a new HTTP request message.</summary>
+    /// <summary>
+    /// Creates a new HTTP request message.
+    /// </summary>
     public HttpRequestMessage CreateRequest() => new HttpRequestMessage(new HttpMethod(Method), BuildUri().ToString());
 }

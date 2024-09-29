@@ -5,11 +5,11 @@ namespace VuforiaWebService.Api.Core;
 
 /// <summary>
 /// A thread-safe back-off handler which handles an abnormal HTTP response or an exception with
-/// <see cref="T:VuforiaPortal.Apis.Util.IBackOff" />.
+/// <see cref="IBackOff" />.
 /// </summary>
 public class BackOffHandler : IHttpUnsuccessfulResponseHandler, IHttpExceptionHandler
 {
-    private static readonly ILogger Logger = ApplicationContext.Logger.ForType<BackOffHandler>();
+    private static readonly ILogger _logger = ApplicationContext.Logger.ForType<BackOffHandler>();
 
     /// <summary>Gets the back-off policy used by this back-off handler.</summary>
     public IBackOff BackOff { get; private set; }
@@ -22,13 +22,13 @@ public class BackOffHandler : IHttpUnsuccessfulResponseHandler, IHttpExceptionHa
 
     /// <summary>
     /// Gets a delegate function which indicates whether this back-off handler should handle an abnormal HTTP
-    /// response. The default is <see cref="F:VuforiaPortal.Apis.Http.BackOffHandler.Initializer.DefaultHandleUnsuccessfulResponseFunc" />.
+    /// response. The default is <see cref="Initializer.DefaultHandleUnsuccessfulResponseFunc" />.
     /// </summary>
     public Func<HttpResponseMessage, bool> HandleUnsuccessfulResponseFunc { get; private set; }
 
     /// <summary>
     /// Gets a delegate function which indicates whether this back-off handler should handle an exception. The
-    /// default is <see cref="F:VuforiaPortal.Apis.Http.BackOffHandler.Initializer.DefaultHandleExceptionFunc" />.
+    /// default is <see cref="Initializer.DefaultHandleExceptionFunc" />.
     /// </summary>
     public Func<Exception, bool> HandleExceptionFunc { get; private set; }
 
@@ -46,30 +46,38 @@ public class BackOffHandler : IHttpUnsuccessfulResponseHandler, IHttpExceptionHa
         HandleExceptionFunc = initializer.HandleExceptionFunc;
         HandleUnsuccessfulResponseFunc = initializer.HandleUnsuccessfulResponseFunc;
     }
-    /// <inheritdoc/>
 
-    public virtual async Task<bool> HandleResponseAsync(HandleUnsuccessfulResponseArgs args) => HandleUnsuccessfulResponseFunc != null && HandleUnsuccessfulResponseFunc(args.Response)
-            && await HandleAsync(args.SupportsRetry, args.CurrentFailedTry, args.CancellationToken).ConfigureAwait(false);
     /// <inheritdoc/>
+    public virtual async Task<bool> HandleResponseAsync(HandleUnsuccessfulResponseArgs args)
+    {
+        return HandleUnsuccessfulResponseFunc != null && HandleUnsuccessfulResponseFunc(args.Response)
+            ? await HandleAsync(args.SupportsRetry, args.CurrentFailedTry, args.CancellationToken).ConfigureAwait(false)
+            : false;
+    }
 
-    public virtual async Task<bool> HandleExceptionAsync(HandleExceptionArgs args) => HandleExceptionFunc != null && HandleExceptionFunc(args.Exception)
-            && await HandleAsync(args.SupportsRetry, args.CurrentFailedTry, args.CancellationToken).ConfigureAwait(false);
+    /// <inheritdoc/>
+    public virtual async Task<bool> HandleExceptionAsync(HandleExceptionArgs args)
+    {
+        return HandleExceptionFunc != null && HandleExceptionFunc(args.Exception)
+            ? await HandleAsync(args.SupportsRetry, args.CurrentFailedTry, args.CancellationToken).ConfigureAwait(false)
+            : false;
+    }
 
     /// <summary>
     /// Handles back-off. In case the request doesn't support retry or the back-off time span is greater than the
     /// maximum time span allowed for a request, the handler returns <c>false</c>. Otherwise the current thread
-    /// will block for x milliseconds (x is defined by the <see cref="P:VuforiaPortal.Apis.Http.BackOffHandler.BackOff" /> instance), and this handler
+    /// will block for x milliseconds (x is defined by the <see cref="BackOff" /> instance), and this handler
     /// returns <c>true</c>.
     /// </summary>
     private async Task<bool> HandleAsync(bool supportsRetry, int currentFailedTry, CancellationToken cancellationToken)
     {
         if (!supportsRetry || BackOff.MaxNumOfRetries < currentFailedTry)
             return false;
-        TimeSpan ts = BackOff.GetNextBackOff(currentFailedTry);
+        var ts = BackOff.GetNextBackOff(currentFailedTry);
         if (ts > MaxTimeSpan || ts < TimeSpan.Zero)
             return false;
         await Wait(ts, cancellationToken).ConfigureAwait(false);
-        Logger.Debug("Back-Off handled the error. Waited {0}ms before next retry...", ts.TotalMilliseconds);
+        _logger.Debug("Back-Off handled the error. Waited {0}ms before next retry...", ts.TotalMilliseconds);
         return true;
     }
 
@@ -86,8 +94,8 @@ public class BackOffHandler : IHttpUnsuccessfulResponseHandler, IHttpExceptionHa
         public static readonly Func<HttpResponseMessage, bool> DefaultHandleUnsuccessfulResponseFunc = r => r.StatusCode == HttpStatusCode.ServiceUnavailable;
         /// <summary>
         /// Default function which handles exception which aren't
-        /// <see cref="T:System.Threading.Tasks.TaskCanceledException" /> or
-        /// <see cref="T:System.OperationCanceledException" />. Those exceptions represent a task or an operation
+        /// <see cref="TaskCanceledException" /> or
+        /// <see cref="OperationCanceledException" />. Those exceptions represent a task or an operation
         /// which was canceled and shouldn't be retried.
         /// </summary>
         public static readonly Func<Exception, bool> DefaultHandleExceptionFunc = ex =>
@@ -107,17 +115,19 @@ public class BackOffHandler : IHttpUnsuccessfulResponseHandler, IHttpExceptionHa
 
         /// <summary>
         /// Gets or sets a delegate function which indicates whether this back-off handler should handle an
-        /// abnormal HTTP response. The default is <see cref="F:VuforiaPortal.Apis.Http.BackOffHandler.Initializer.DefaultHandleUnsuccessfulResponseFunc" />.
+        /// abnormal HTTP response. The default is <see cref="DefaultHandleUnsuccessfulResponseFunc" />.
         /// </summary>
         public Func<HttpResponseMessage, bool> HandleUnsuccessfulResponseFunc { get; set; }
 
         /// <summary>
         /// Gets or sets a delegate function which indicates whether this back-off handler should handle an
-        /// exception. The default is <see cref="F:VuforiaPortal.Apis.Http.BackOffHandler.Initializer.DefaultHandleExceptionFunc" />.
+        /// exception. The default is <see cref="DefaultHandleExceptionFunc" />.
         /// </summary>
         public Func<Exception, bool> HandleExceptionFunc { get; set; }
 
-        /// <summary>Constructs a new initializer by the given back-off.</summary>
+        /// <summary>
+        /// Constructs a new initializer by the given back-off.
+        /// </summary>
         public Initializer(IBackOff backOff)
         {
             BackOff = backOff;

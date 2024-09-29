@@ -1,6 +1,5 @@
 ﻿using VuforiaWebService.Api.Core;
 using VuforiaWebService.Api.Core.Request;
-using VuforiaWebService.Api.Core.Types;
 
 namespace VuforiaWebService.Api.Target.Requests;
 

@@ -4,29 +4,37 @@ using VuforiaWebService.Api.Core.Utils;
 
 namespace VuforiaWebService.Api.Core;
 
-/// <summary>A collection of parameters (key value pairs). May contain duplicate keys.</summary>
+/// <summary>
+/// A collection of parameters (key value pairs). May contain duplicate keys.
+/// </summary>
 public class ParameterCollection : List<KeyValuePair<string, string>>
 {
-    /// <summary>Constructs a new parameter collection.</summary>
+    /// <summary>
+    /// Constructs a new parameter collection.
+    /// </summary>
     public ParameterCollection()
     {
     }
 
-    /// <summary>Constructs a new parameter collection from the given collection.</summary>
-    public ParameterCollection(
-      IEnumerable<KeyValuePair<string, string>> collection)
-      : base(collection)
+    /// <summary>
+    /// Constructs a new parameter collection from the given collection.
+    /// </summary>
+    public ParameterCollection(IEnumerable<KeyValuePair<string, string>> collection) : base(collection)
     {
     }
 
-    /// <summary>Adds a single parameter to this collection.</summary>
+    /// <summary>
+    /// Adds a single parameter to this collection.
+    /// </summary>
     public void Add(string key, string value) => Add(new KeyValuePair<string, string>(key, value));
 
-    /// <summary>Returns <c>true</c> if this parameter is set within the collection.</summary>
+    /// <summary>
+    /// Returns <c>true</c> if this parameter is set within the collection.
+    /// </summary>
     public bool ContainsKey(string key)
     {
         key.ThrowIfNullOrEmpty(nameof(key));
-        return TryGetValue(key, out string str);
+        return TryGetValue(key, out var str);
     }
 
     /// <summary>
@@ -36,7 +44,7 @@ public class ParameterCollection : List<KeyValuePair<string, string>>
     public bool TryGetValue(string key, out string value)
     {
         key.ThrowIfNullOrEmpty(nameof(key));
-        foreach (KeyValuePair<string, string> keyValuePair in this)
+        foreach (var keyValuePair in this)
         {
             if (keyValuePair.Key.Equals(key))
             {
@@ -52,7 +60,10 @@ public class ParameterCollection : List<KeyValuePair<string, string>>
     /// Returns the value of the first matching key, or throws a KeyNotFoundException if the parameter is not
     /// present within the collection.
     /// </summary>
-    public string GetFirstMatch(string key) => !TryGetValue(key, out string str) ? throw new KeyNotFoundException("Parameter with the name '" + key + "' was not found.") : str;
+    public string GetFirstMatch(string key)
+    {
+        return !TryGetValue(key, out var str) ? throw new KeyNotFoundException("Parameter with the name '" + key + "' was not found.") : str;
+    }
 
     /// <summary>
     /// Returns all matches for the specified key. May return an empty enumeration if the key is not present.
@@ -60,7 +71,7 @@ public class ParameterCollection : List<KeyValuePair<string, string>>
     public IEnumerable<string> GetAllMatches(string key)
     {
         key.ThrowIfNullOrEmpty(nameof(key));
-        foreach (KeyValuePair<string, string> keyValuePair in this)
+        foreach (var keyValuePair in this)
         {
             if (keyValuePair.Key.Equals(key))
                 yield return keyValuePair.Value;
@@ -80,12 +91,12 @@ public class ParameterCollection : List<KeyValuePair<string, string>>
     /// </summary>
     public static ParameterCollection FromQueryString(string qs)
     {
-        ParameterCollection parameterCollection = new ParameterCollection();
-        string str1 = qs;
-        char[] chArray = new char[1] { '&' };
-        foreach (string str2 in str1.Split(chArray))
+        var parameterCollection = new ParameterCollection();
+        var str1 = qs;
+        var chArray = new char[1] { '&' };
+        foreach (var str2 in str1.Split(chArray))
         {
-            string[] strArray = str2.Split('=');
+            var strArray = str2.Split('=');
             if (strArray.Length == 2)
                 parameterCollection.Add(Uri.UnescapeDataString(strArray[0]), Uri.UnescapeDataString(strArray[1]));
             else
@@ -99,15 +110,14 @@ public class ParameterCollection : List<KeyValuePair<string, string>>
     /// If the value is an enumerable, a parameter pair will be added for each value.
     /// Otherwise the value will be converted into a string using the .ToString() method.
     /// </summary>
-    public static ParameterCollection FromDictionary(
-      IDictionary<string, object> dictionary)
+    public static ParameterCollection FromDictionary(IDictionary<string, object> dictionary)
     {
-        ParameterCollection parameterCollection = new ParameterCollection();
-        foreach (KeyValuePair<string, object> keyValuePair in dictionary)
+        var parameterCollection = new ParameterCollection();
+        foreach (var keyValuePair in dictionary)
         {
             if (keyValuePair.Value is not string and IEnumerable enumerable)
             {
-                foreach (object o in enumerable)
+                foreach (var o in enumerable)
                     parameterCollection.Add(keyValuePair.Key, Utilities.ConvertToString(o));
             }
             else

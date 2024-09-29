@@ -1,5 +1,6 @@
 ﻿namespace VuforiaWebService.Api.Core;
 
+/// <inheritdoc/>
 public class ConfigurableHttpClient : HttpClient
 {
     /// <summary>Gets the configurable message handler.</summary>

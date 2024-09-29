@@ -1,77 +1,38 @@
 ﻿using System.Reflection;
-using VuforiaWebService.Api.Core.Types;
 
 namespace VuforiaWebService.Api.Core.Utils;
 
 /// <summary>
-/// Utility class for iterating on <see cref="T:VuforiaPortal.Apis.Util.RequestParameterAttribute" /> properties in a request object.
+/// Utility class for iterating on properties in a request object with the <see cref="RequestParameterAttribute"/> attribute.
 /// </summary>
-public static class ParameterUtils
+internal static class ParameterUtils
 {
     /// <summary>
-    /// Creates a <see cref="T:System.Net.Http.FormUrlEncodedContent" /> with all the specified parameters in
-    /// the input request. It uses reflection to iterate over all properties with
-    /// <see cref="T:VuforiaPortal.Apis.Util.RequestParameterAttribute" /> attribute.
+    /// Creates a dictionary of parameters from the properties in the request object that have the <see cref="RequestParameterAttribute"/> attribute.
     /// </summary>
-    /// <param name="request">
-    /// A request object which contains properties with
-    /// <see cref="T:VuforiaPortal.Apis.Util.RequestParameterAttribute" /> attribute. Those properties will be serialized
-    /// to the returned <see cref="T:System.Net.Http.FormUrlEncodedContent" />.
-    /// </param>
-    /// <returns>
-    /// A <see cref="T:System.Net.Http.FormUrlEncodedContent" /> which contains the all the given object required
-    /// values.
-    /// </returns>
-    public static FormUrlEncodedContent CreateFormUrlEncodedContent(object request)
-    {
-        IList<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
-        IterateParameters(request, (type, name, value) => list.Add(new KeyValuePair<string, string>(name, value.ToString())));
-        return new FormUrlEncodedContent(list);
-    }
-
-    /// <summary>
-    /// Creates a parameter dictionary by using reflection to iterate over all properties with
-    /// <see cref="T:VuforiaPortal.Apis.Util.RequestParameterAttribute" /> attribute.
-    /// </summary>
-    /// <param name="request">
-    /// A request object which contains properties with
-    /// <see cref="T:VuforiaPortal.Apis.Util.RequestParameterAttribute" /> attribute. Those properties will be set
-    /// in the output dictionary.
-    /// </param>
+    /// <param name="request">A request object that contains properties with the <see cref="RequestParameterAttribute"/> attribute. These properties will be added to the output dictionary.</param>
+    /// <returns>A dictionary of parameter values.</returns>
     public static IDictionary<string, object> CreateParameterDictionary(object request)
     {
-        Dictionary<string, object> dict = new Dictionary<string, object>();
+        var dict = new Dictionary<string, object>();
         IterateParameters(request, (type, name, value) => dict.Add(name, value));
         return dict;
     }
 
     /// <summary>
-    /// Sets query parameters in the given builder with all all properties with the
-    /// <see cref="T:VuforiaPortal.Apis.Util.RequestParameterAttribute" /> attribute.
+    /// Iterates over all properties in the request object with the <see cref="RequestParameterAttribute"/> attribute and invokes the specified action for each.
     /// </summary>
-    /// <param name="builder">The request builder</param>
-    /// <param name="request">
-    /// A request object which contains properties with
-    /// <see cref="T:VuforiaPortal.Apis.Util.RequestParameterAttribute" /> attribute. Those properties will be set in the
-    /// given request builder object
-    /// </param>
-    public static void InitParameters(RequestBuilder builder, object request) => IterateParameters(request, (type, name, value) => builder.AddParameter(type, name, value.ToString()));
-
-    /// <summary>
-    /// Iterates over all <see cref="T:VuforiaPortal.Apis.Util.RequestParameterAttribute" /> properties in the request
-    /// object and invokes the specified action for each of them.
-    /// </summary>
-    /// <param name="request">A request object</param>
-    /// <param name="action">An action to invoke which gets the parameter type, name and its value</param>
+    /// <param name="request">A request object.</param>
+    /// <param name="action">An action to invoke for each property, which receives the parameter type, name, and value.</param>
     private static void IterateParameters(object request, Action<RequestParameterType, string, object> action)
     {
-        foreach (PropertyInfo property in request.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        foreach (var property in request.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
         {
             if (property.GetCustomAttributes(typeof(RequestParameterAttribute), false).FirstOrDefault() is RequestParameterAttribute parameterAttribute)
             {
-                string str = parameterAttribute.Name ?? property.Name.ToLower();
-                Type propertyType = property.PropertyType;
-                object obj = property.GetValue(request, null);
+                var str = parameterAttribute.Name ?? property.Name.ToLower();
+                var propertyType = property.PropertyType;
+                var obj = property.GetValue(request, null);
                 if (propertyType.IsValueType || obj != null)
                     action(parameterAttribute.Type, str, obj);
             }

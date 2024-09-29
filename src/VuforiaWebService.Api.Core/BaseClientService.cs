@@ -1,19 +1,50 @@
-﻿using Newtonsoft.Json;
+﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using VuforiaWebService.Api.Core.Extensions;
 using VuforiaWebService.Api.Core.Logger;
+using VuforiaWebService.Api.Core.Response;
 using VuforiaWebService.Api.Core.Serialization;
-using VuforiaWebService.Api.Core.Types;
 
 namespace VuforiaWebService.Api.Core;
 
+/// <summary>
+/// An abstract base class that provides a common set of functionality for all client services that interact with remote APIs.
+/// Implements the IClientService interface and includes functionality for handling HTTP requests and responses, serializing
+/// and deserializing data, and managing HTTP client configuration settings.
+/// </summary>
 public abstract class BaseClientService : IClientService, IDisposable
 {
-    /// <summary>The class logger.</summary>
+    /// <summary>
+    /// The class logger.
+    /// </summary>
     private static readonly ILogger Logger = ApplicationContext.Logger.ForType<BaseClientService>();
-    /// <summary>The default maximum allowed length of a URL string for GET requests.</summary>
+
+    /// <summary>
+    /// The default maximum allowed length of a URL string for GET requests.
+    /// </summary>
     public const uint DefaultMaxUrlLength = 2048;
 
-    /// <summary>Constructs a new base client with the specified initializer.</summary>
+    /// <inheritdoc/>
+    public ConfigurableHttpClient HttpClient { get; private set; }
+
+    /// <inheritdoc/>
+    public IConfigurableHttpClientInitializer HttpClientInitializer { get; private set; }
+
+    /// <inheritdoc/>
+    public string ApplicationName { get; private set; }
+
+    /// <inheritdoc/>
+    public ISerializer Serializer { get; private set; }
+
+    /// <inheritdoc/>
+    public abstract string Name { get; }
+
+    /// <inheritdoc/>
+    public abstract string BaseUri { get; }
+
+    /// <summary>
+    /// Constructs a new base client with the specified initializer.
+    /// </summary>
     protected BaseClientService(Initializer initializer)
     {
         Serializer = initializer.Serializer;
@@ -24,10 +55,10 @@ public abstract class BaseClientService : IClientService, IDisposable
         HttpClient = CreateHttpClient(initializer);
     }
 
-    protected virtual ConfigurableHttpClient CreateHttpClient(Initializer initializer)
+    private ConfigurableHttpClient CreateHttpClient(Initializer initializer)
     {
-        IHttpClientFactory httpClientFactory = initializer.HttpClientFactory ?? new HttpClientFactory();
-        CreateHttpClientArgs args = new CreateHttpClientArgs()
+        var httpClientFactory = initializer.HttpClientFactory ?? new HttpClientFactory();
+        var args = new CreateHttpClientArgs()
         {
             ApplicationName = ApplicationName,
             NetworkCredential = initializer.HttpClientInitializer.NetworkCredential
@@ -36,42 +67,34 @@ public abstract class BaseClientService : IClientService, IDisposable
             args.Initializers.Add(HttpClientInitializer);
         if (initializer.DefaultExponentialBackOffPolicy != ExponentialBackOffPolicy.None)
             args.Initializers.Add(new ExponentialBackOffInitializer(initializer.DefaultExponentialBackOffPolicy, new Func<BackOffHandler>(CreateBackOffHandler)));
-        ConfigurableHttpClient httpClient = httpClientFactory.CreateHttpClient(args);
+        var httpClient = httpClientFactory.CreateHttpClient(args);
         if (initializer.MaxUrlLength > 0U)
             httpClient.MessageHandler.AddExecuteInterceptor(new MaxUrlLengthInterceptor(initializer.MaxUrlLength));
         return httpClient;
     }
 
     /// <summary>
-    /// Creates the back-off handler with <see cref="T:VuforiaPortal.Apis.Util.ExponentialBackOff" />.
+    /// Creates the back-off handler with <see cref="ExponentialBackOff" />.
     /// Overrides this method to change the default behavior of back-off handler (e.g. you can change the maximum
     /// waited request's time span, or create a back-off handler with you own implementation of
-    /// <see cref="T:VuforiaPortal.Apis.Util.IBackOff" />).
+    /// <see cref="IBackOff" />).
     /// </summary>
     protected virtual BackOffHandler CreateBackOffHandler() => new BackOffHandler(new ExponentialBackOff());
 
-    public ConfigurableHttpClient HttpClient { get; private set; }
-
-    public IConfigurableHttpClientInitializer HttpClientInitializer { get; private set; }
-
-    public string ApplicationName { get; private set; }
-
+    /// <inheritdoc/>
     public void SetRequestSerailizedContent(HttpRequestMessage request, object body) => request.SetRequestSerailizedContent(this, body);
 
-    public ISerializer Serializer { get; private set; }
+    /// <inheritdoc/>
+    public virtual string SerializeObject(object obj) => obj is string value ? value : Serializer.Serialize(obj);
 
-    public virtual string SerializeObject(object obj) => obj is string ? (string)obj : Serializer.Serialize(obj);
-
-    public virtual async Task<string> DeserializeResponse(HttpResponseMessage response) => await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
+    /// <inheritdoc/>
     public virtual async Task<T> DeserializeResponse<T>(HttpResponseMessage response)
     {
-        object input = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        if (Equals(typeof(T), typeof(string)))
-            return (T)input;
+        var input = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
         try
         {
-            return Serializer.Deserialize<T>((string)input);
+            return Serializer.Deserialize<T>(input);
         }
         catch (JsonReaderException ex)
         {
@@ -79,6 +102,7 @@ public abstract class BaseClientService : IClientService, IDisposable
         }
     }
 
+    /// <inheritdoc/>
     public virtual async Task<VuforiaErrorResponse> DeserializeError(HttpResponseMessage response)
     {
         VuforiaErrorResponse errorResponse;
@@ -95,10 +119,7 @@ public abstract class BaseClientService : IClientService, IDisposable
         return errorResponse;
     }
 
-    public abstract string Name { get; }
-
-    public abstract string BaseUri { get; }
-
+    /// <inheritdoc/>
     public virtual void Dispose()
     {
         if (HttpClient == null)
@@ -106,19 +127,21 @@ public abstract class BaseClientService : IClientService, IDisposable
         HttpClient.Dispose();
     }
 
-    /// <summary>An initializer class for the client service.</summary>
+    /// <summary>
+    /// An initializer class for the client service.
+    /// </summary>
     public class Initializer
     {
         /// <summary>
-        /// Gets or sets the factory for creating <see cref="T:System.Net.Http.HttpClient" /> instance. If this
-        /// property is not set the service uses a new <see cref="T:VuforiaPortal.Apis.Http.HttpClientFactory" /> instance.
+        /// Gets or sets the factory for creating <see cref="System.Net.Http.HttpClient" /> instance. If this
+        /// property is not set the service uses a new <see cref="Core.HttpClientFactory" /> instance.
         /// </summary>
         public IHttpClientFactory HttpClientFactory { get; set; }
 
         /// <summary>
         /// Gets or sets a HTTP client initializer which is able to customize properties on
-        /// <see cref="T:VuforiaPortal.Apis.Http.ConfigurableHttpClient" /> and
-        /// <see cref="T:VuforiaPortal.Apis.Http.ConfigurableMessageHandler" />.
+        /// <see cref="ConfigurableHttpClient" /> and
+        /// <see cref="ConfigurableMessageHandler" />.
         /// </summary>
         public IConfigurableHttpClientInitializer HttpClientInitializer { get; set; }
 
@@ -127,14 +150,14 @@ public abstract class BaseClientService : IClientService, IDisposable
         /// <c>UnsuccessfulResponse503</c>, which means that exponential back-off is used on 503 abnormal HTTP
         /// response.
         /// If the value is set to <c>None</c>, no exponential back-off policy is used, and it's up to the user to
-        /// configure the <see cref="T:VuforiaPortal.Apis.Http.ConfigurableMessageHandler" /> in an
-        /// <see cref="T:VuforiaPortal.Apis.Http.IConfigurableHttpClientInitializer" /> to set a specific back-off
-        /// implementation (using <see cref="T:VuforiaPortal.Apis.Http.BackOffHandler" />).
+        /// configure the <see cref="ConfigurableMessageHandler" /> in an
+        /// <see cref="IConfigurableHttpClientInitializer" /> to set a specific back-off
+        /// implementation (using <see cref="BackOffHandler" />).
         /// </summary>
         public ExponentialBackOffPolicy DefaultExponentialBackOffPolicy { get; set; }
 
         /// <summary>
-        /// Gets or sets the serializer. Default value is <see cref="T:VuforiaPortal.Apis.Json.NewtonsoftJsonSerializer" />.
+        /// Gets or sets the serializer. Default value is <see cref="XmlObjectSerializer" />.
         /// </summary>
         public ISerializer Serializer { get; set; }
 
@@ -149,7 +172,9 @@ public abstract class BaseClientService : IClientService, IDisposable
         /// </summary>
         public uint MaxUrlLength { get; set; }
 
-        /// <summary>Constructs a new initializer with default values.</summary>
+        /// <summary>
+        /// Constructs a new initializer with default values.
+        /// </summary>
         public Initializer()
         {
             Serializer = new NewtonsoftJsonSerializer();

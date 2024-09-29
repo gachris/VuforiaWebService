@@ -5,6 +5,8 @@
 /// </summary>
 public interface IHttpClientFactory
 {
-    /// <summary>Creates a new configurable HTTP client.</summary>
+    /// <summary>
+    /// Creates a new configurable HTTP client.
+    /// </summary>
     ConfigurableHttpClient CreateHttpClient(CreateHttpClientArgs args);
 }

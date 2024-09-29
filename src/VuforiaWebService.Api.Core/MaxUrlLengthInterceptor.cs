@@ -14,28 +14,30 @@ namespace VuforiaWebService.Api.Core;
 /// </summary>
 public class MaxUrlLengthInterceptor : IHttpExecuteInterceptor
 {
-    private readonly uint maxUrlLength;
+    private readonly uint _maxUrlLength;
 
-    /// <summary>Constructs a new Max URL length interceptor with the given max length.</summary>
-    public MaxUrlLengthInterceptor(uint maxUrlLength) => this.maxUrlLength = maxUrlLength;
+    /// <summary>
+    /// Constructs a new Max URL length interceptor with the given max length.
+    /// </summary>
+    public MaxUrlLengthInterceptor(uint maxUrlLength) => _maxUrlLength = maxUrlLength;
+
     /// <inheritdoc/>
-
     public Task InterceptAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (request.Method != HttpMethod.Get || request.RequestUri.AbsoluteUri.Length <= maxUrlLength)
+        if (request.Method != HttpMethod.Get || request.RequestUri?.AbsoluteUri.Length <= _maxUrlLength)
         {
-            return Task.Delay(0);
+            return Task.FromResult(0);
         }
         request.Method = HttpMethod.Post;
-        string query = request.RequestUri.Query;
-        if (!string.IsNullOrEmpty(query))
+        var query = request.RequestUri?.Query;
+        if (request.RequestUri != null && !string.IsNullOrEmpty(query))
         {
             request.Content = new StringContent(query.Substring(1));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-            string str = request.RequestUri.ToString();
+            var str = request.RequestUri.ToString();
             request.RequestUri = new Uri(str.Remove(str.IndexOf("?")));
         }
         request.Headers.Add("X-HTTP-Method-Override", "GET");
-        return Task.Delay(0);
+        return Task.FromResult(0);
     }
 }

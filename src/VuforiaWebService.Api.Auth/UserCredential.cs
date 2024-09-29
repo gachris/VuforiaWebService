@@ -3,7 +3,6 @@ using System.Security.Cryptography;
 using System.Text;
 using VuforiaWebService.Api.Core;
 using VuforiaWebService.Api.Core.Logger;
-using VuforiaWebService.Api.Core.Types;
 
 namespace VuforiaWebService.Api.Auth;
 

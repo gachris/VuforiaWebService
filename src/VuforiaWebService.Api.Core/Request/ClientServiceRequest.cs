@@ -1,6 +1,6 @@
 ﻿using VuforiaWebService.Api.Core.Extensions;
 using VuforiaWebService.Api.Core.Logger;
-using VuforiaWebService.Api.Core.Types;
+using VuforiaWebService.Api.Core.Response;
 using VuforiaWebService.Api.Core.Utils;
 
 namespace VuforiaWebService.Api.Core.Request;
@@ -12,65 +12,78 @@ namespace VuforiaWebService.Api.Core.Request;
 /// <typeparam name="TResponse">The type of the response object</typeparam>
 public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TResponse>, IClientServiceRequest
 {
-    /// <summary>The class logger.</summary>
-    private static readonly ILogger Logger = ApplicationContext.Logger.ForType<ClientServiceRequest<TResponse>>();
+    private static readonly ILogger _logger = ApplicationContext.Logger.ForType<ClientServiceRequest<TResponse>>();
 
-    /// <summary>The service on which this request will be executed.</summary>
+    private readonly Dictionary<string, IParameter> _requestParameters = [];
+
+    /// <summary>
+    /// The service on which this request will be executed.
+    /// </summary>
     private readonly IClientService _service;
 
-    /// <summary>The Database Access Keys.</summary>
+    /// <summary>
+    /// The Database Access Keys.
+    /// </summary>
     private readonly DatabaseAccessKeys _keys;
-    /// <inheritdoc/>
 
+    /// <inheritdoc/>
     public abstract string MethodName { get; }
-    /// <inheritdoc/>
 
+    /// <inheritdoc/>
     public abstract string RestPath { get; }
-    /// <inheritdoc/>
 
+    /// <inheritdoc/>
     public abstract string HttpMethod { get; }
-    /// <inheritdoc/>
 
-    public IDictionary<string, IParameter> RequestParameters { get; private set; }
     /// <inheritdoc/>
+    public IDictionary<string, IParameter> RequestParameters => _requestParameters;
 
+    /// <inheritdoc/>
     public IClientService Service => _service;
-    /// <inheritdoc/>
 
+    /// <summary>
+    /// Gets the Database Access Keys.
+    /// </summary>
     public DatabaseAccessKeys Keys => _keys;
 
-    /// <summary>Creates a new service request.</summary>
+    /// <summary>
+    /// Creates a new service request.
+    /// </summary>
     protected ClientServiceRequest(IClientService service, DatabaseAccessKeys keys)
     {
         _service = service;
         _keys = keys;
+
+        InitParameters();
     }
 
     /// <summary>
     /// Initializes request's parameters. Inherited classes MUST override this method to add parameters to the
-    /// <see cref="P:VuforiaPortal.Apis.Requests.ClientServiceRequest`1.RequestParameters" /> dictionary.
+    /// <see cref="RequestParameters" /> dictionary.
     /// </summary>
-    protected virtual void InitParameters() => RequestParameters = new Dictionary<string, IParameter>();
-    /// <inheritdoc/>
+    protected virtual void InitParameters()
+    {
+    }
 
+    /// <inheritdoc/>
     public TResponse Execute()
     {
         try
         {
-            using HttpResponseMessage result = ExecuteUnparsedAsync(CancellationToken.None).Result;
+            using var result = ExecuteUnparsedAsync(CancellationToken.None).Result;
             return ParseResponse(result).Result;
         }
         catch (AggregateException ex)
         {
-            throw ex.InnerException;
+            throw ex.InnerException ?? ex;
         }
-        catch (Exception ex)
+        catch
         {
-            throw ex;
+            throw;
         }
     }
-    /// <inheritdoc/>
 
+    /// <inheritdoc/>
     public Stream ExecuteAsStream()
     {
         try
@@ -79,36 +92,36 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
         }
         catch (AggregateException ex)
         {
-            throw ex.InnerException;
+            throw ex.InnerException ?? ex;
         }
-        catch (Exception ex)
+        catch
         {
-            throw ex;
+            throw;
         }
     }
-    /// <inheritdoc/>
 
+    /// <inheritdoc/>
     public async Task<TResponse> ExecuteAsync() => await ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
-    /// <inheritdoc/>
 
+    /// <inheritdoc/>
     public async Task<TResponse> ExecuteAsync(CancellationToken cancellationToken)
     {
-        TResponse response1;
-        using (HttpResponseMessage response2 = await ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false))
+        TResponse response;
+        using (var httpResponseMessage = await ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            response1 = await ParseResponse(response2).ConfigureAwait(false);
+            response = await ParseResponse(httpResponseMessage).ConfigureAwait(false);
         }
-        return response1;
+        return response;
     }
-    /// <inheritdoc/>
 
+    /// <inheritdoc/>
     public async Task<Stream> ExecuteAsStreamAsync() => await ExecuteAsStreamAsync(CancellationToken.None).ConfigureAwait(false);
-    /// <inheritdoc/>
 
+    /// <inheritdoc/>
     public async Task<Stream> ExecuteAsStreamAsync(CancellationToken cancellationToken)
     {
-        HttpResponseMessage httpResponseMessage = await ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false);
+        var httpResponseMessage = await ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false);
         cancellationToken.ThrowIfCancellationRequested();
         return await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
     }
@@ -116,70 +129,73 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
     /// <summary>Sync executes the request without parsing the result. </summary>
     private async Task<HttpResponseMessage> ExecuteUnparsedAsync(CancellationToken cancellationToken)
     {
-        using HttpRequestMessage request = CreateRequest();
+        using var request = CreateRequest();
         return await _service.HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Parses the response and deserialize the content into the requested response object. </summary>
-    protected virtual async Task<TResponse> ParseResponse(HttpResponseMessage response)
+    private async Task<TResponse> ParseResponse(HttpResponseMessage response)
     {
         if (response.IsSuccessStatusCode)
+        {
             return await _service.DeserializeResponse<TResponse>(response).ConfigureAwait(false);
-        VuforiaErrorResponse requestError = await _service.DeserializeError(response).ConfigureAwait(false);
+        }
+        var requestError = await _service.DeserializeError(response).ConfigureAwait(false);
         throw new VuforiaPortalApiException(_service.Name, requestError.ToString())
         {
             Error = requestError,
             HttpStatusCode = response.StatusCode
         };
     }
-    /// <inheritdoc/>
 
-    public HttpRequestMessage CreateRequest(bool? overrideGZipEnabled = null)
+    /// <inheritdoc/>
+    public HttpRequestMessage CreateRequest()
     {
-        HttpRequestMessage request = CreateBuilder().CreateRequest();
-        object body = GetBody();
+        var request = CreateBuilder().CreateRequest();
+        var body = GetBody();
+
         _service.HttpClientInitializer.GenerateAccessToken(_service, Keys, HttpMethod, body, request.RequestUri.AbsolutePath);
+
         request.SetRequestSerailizedContent(_service, body);
+
         return request;
     }
 
     /// <summary>
-    /// Creates the <see cref="T:VuforiaPortal.Apis.Requests.RequestBuilder" /> which is used to generate a request.
+    /// Creates the <see cref="RequestBuilder" /> which is used to generate a request.
     /// </summary>
     /// <returns>
     /// A new builder instance which contains the HTTP method and the right Uri with its path and query parameters.
     /// </returns>
     private RequestBuilder CreateBuilder()
     {
-        var requestBuilder = new RequestBuilder()
-        {
-            BaseUri = new Uri(Service.BaseUri),
-            Path = RestPath,
-            Method = HttpMethod
-        };
-        IDictionary<string, object> parameterDictionary = ParameterUtils.CreateParameterDictionary(this);
+        var requestBuilder = new RequestBuilder(new Uri(Service.BaseUri), RestPath, HttpMethod);
+        var parameterDictionary = ParameterUtils.CreateParameterDictionary(this);
         AddParameters(requestBuilder, ParameterCollection.FromDictionary(parameterDictionary));
         return requestBuilder;
     }
 
-    /// <summary>Generates the right URL for this request.</summary>
-    protected string GenerateRequestUri() => CreateBuilder().BuildUri().ToString();
-    /// <inheritdoc/>
-
-    protected virtual object GetBody() => null;
+    ///<summary>Returns the body of the request.</summary>
+    protected virtual object GetBody() => default;
 
     /// <summary>Adds path and query parameters to the given <c>requestBuilder</c>.</summary>
     private void AddParameters(RequestBuilder requestBuilder, ParameterCollection inputParameters)
     {
-        foreach (KeyValuePair<string, string> inputParameter in inputParameters)
+        inputParameters.ForEach(inputParameter =>
         {
-            if (!RequestParameters.TryGetValue(inputParameter.Key, out IParameter parameter))
+            if (!RequestParameters.TryGetValue(inputParameter.Key, out var parameter))
                 throw new VuforiaPortalApiException(Service.Name, string.Format("Invalid parameter \"{0}\" was specified", inputParameter.Key));
-            string defaultValue = inputParameter.Value;
+
+            var defaultValue = inputParameter.Value;
+
             if (!ParameterValidator.ValidateParameter(parameter, defaultValue))
                 throw new VuforiaPortalApiException(Service.Name, string.Format("Parameter validation failed for \"{0}\"", parameter.Name));
-            defaultValue ??= parameter.DefaultValue;
-            string parameterType = parameter.ParameterType;
+
+            if (defaultValue == null)
+            {
+                defaultValue = parameter.DefaultValue;
+            }
+            var parameterType = parameter.ParameterType;
             if (!(parameterType == "path"))
             {
                 if (parameterType == "query")
@@ -187,16 +203,18 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
                     if (!Equals(defaultValue, parameter.DefaultValue) || parameter.IsRequired)
                         requestBuilder.AddParameter(RequestParameterType.Query, inputParameter.Key, defaultValue);
                 }
-                else
-                    throw new VuforiaPortalApiException(_service.Name, string.Format("Unsupported parameter type \"{0}\" for \"{1}\"", parameter.ParameterType, parameter.Name));
+                else throw new VuforiaPortalApiException(_service.Name,
+                                                         string.Format("Unsupported parameter type \"{0}\" for \"{1}\"",
+                                                         parameter.ParameterType,
+                                                         parameter.Name));
             }
-            else
-                requestBuilder.AddParameter(RequestParameterType.Path, inputParameter.Key, defaultValue);
-        }
-        foreach (IParameter parameter in RequestParameters.Values)
+            else requestBuilder.AddParameter(RequestParameterType.Path, inputParameter.Key, defaultValue);
+        });
+
+        RequestParameters.Values.ForEach(parameter =>
         {
             if (parameter.IsRequired && !inputParameters.ContainsKey(parameter.Name))
                 throw new VuforiaPortalApiException(_service.Name, string.Format("Parameter \"{0}\" is missing", parameter.Name));
-        }
+        });
     }
 }

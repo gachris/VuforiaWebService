@@ -1,5 +1,4 @@
 ﻿using VuforiaWebService.Api.Core;
-using VuforiaWebService.Api.Core.Types;
 using VuforiaWebService.Api.Core.Utils;
 using VuforiaWebService.Api.Target.Requests;
 using VuforiaWebService.Api.Target.Types;
@@ -100,7 +99,7 @@ public class TargetListResource
         public override string MethodName => "summary";
 
         /// <inheritdoc/>
-        public override string HttpMethod => ApiMethodConstants.GET;
+        public override string HttpMethod => Constants.Get;
 
         /// <inheritdoc/>
         public override string RestPath => "/summary";
@@ -132,7 +131,7 @@ public class TargetListResource
         public override string MethodName => "summary";
 
         /// <inheritdoc/>
-        public override string HttpMethod => ApiMethodConstants.GET;
+        public override string HttpMethod => Constants.Get;
 
         /// <inheritdoc/>
         public override string RestPath => "/summary/{targetId}";
@@ -172,7 +171,7 @@ public class TargetListResource
         public override string MethodName => "duplicates";
 
         /// <inheritdoc/>
-        public override string HttpMethod => ApiMethodConstants.GET;
+        public override string HttpMethod => Constants.Get;
 
         /// <inheritdoc/>
         public override string RestPath => "/duplicates/{targetId}";
@@ -212,7 +211,7 @@ public class TargetListResource
         public override string MethodName => "delete";
 
         /// <inheritdoc/>
-        public override string HttpMethod => ApiMethodConstants.DELETE;
+        public override string HttpMethod => Constants.Delete;
 
         /// <inheritdoc/>
         public override string RestPath => "/targets/{targetId}";
@@ -252,7 +251,7 @@ public class TargetListResource
         public override string MethodName => "get";
 
         /// <inheritdoc/>
-        public override string HttpMethod => ApiMethodConstants.GET;
+        public override string HttpMethod => Constants.Get;
 
         /// <inheritdoc/>
         public override string RestPath => "/targets/{targetId}";
@@ -291,7 +290,7 @@ public class TargetListResource
         public override string MethodName => "insert";
 
         /// <inheritdoc/>
-        public override string HttpMethod => ApiMethodConstants.POST;
+        public override string HttpMethod => Constants.Post;
 
         /// <inheritdoc/>
         public override string RestPath => "/targets";
@@ -318,7 +317,7 @@ public class TargetListResource
         public override string MethodName => "list";
 
         /// <inheritdoc/>
-        public override string HttpMethod => ApiMethodConstants.GET;
+        public override string HttpMethod => Constants.Get;
 
         /// <inheritdoc/>
         public override string RestPath => "/targets";
@@ -357,7 +356,7 @@ public class TargetListResource
         public override string MethodName => "update";
 
         /// <inheritdoc/>
-        public override string HttpMethod => ApiMethodConstants.PUT;
+        public override string HttpMethod => Constants.Put;
 
         /// <inheritdoc/>
         public override string RestPath => "/targets/{targetId}";

@@ -1,4 +1,4 @@
-﻿using VuforiaWebService.Api.Core.Types;
+﻿using VuforiaWebService.Api.Core.Response;
 
 namespace VuforiaWebService.Api.Target.Types;
 
