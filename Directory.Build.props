@@ -18,8 +18,8 @@
 		<PackageIcon>vuforia.logo.png</PackageIcon>
 		<Product>$(MSBuildProjectName)</Product>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<RepositoryUrl>https://github.com/gachris/vCard.Net</RepositoryUrl>
-		<PackageProjectUrl>https://github.com/gachris/vCard.Net/tree/master/src/$(MSBuildProjectName)</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/gachris/VuforiaWebService</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/gachris/VuforiaWebService/tree/master/src/$(MSBuildProjectName)</PackageProjectUrl>
 		<PackageOutputPath>$(MSBuildThisFileDirectory).packages\$(Configuration)</PackageOutputPath>
 		<NeutralLanguage>en-150</NeutralLanguage>
 	</PropertyGroup>
