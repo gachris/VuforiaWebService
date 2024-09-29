@@ -101,7 +101,7 @@ public class VuforiaApiTests
     public void Update_ValidRequest_CallsUpdateOnce()
     {
         // Arrange
-        var request = CreatePostTrackableRequest();
+        var request = CreateUpdateTrackableRequest();
         var response = CreateUpdateResponse();
 
         _mockTargetListResource.Setup(x => x.Update(It.IsAny<ServerAccessKeys>(), request, TARGET_ID))
@@ -255,6 +255,18 @@ public class VuforiaApiTests
     private static PostTrackableRequest CreatePostTrackableRequest()
     {
         return new PostTrackableRequest
+        {
+            ActiveFlag = true,
+            ApplicationMetadata = "Target Metadata",
+            Image = "/9j/4AAQSkZJRgABAQEAAAAAAAD...",
+            Name = "Sample Target",
+            Width = 1
+        };
+    }
+
+    private static UpdateTrackableRequest CreateUpdateTrackableRequest()
+    {
+        return new UpdateTrackableRequest
         {
             ActiveFlag = true,
             ApplicationMetadata = "Target Metadata",

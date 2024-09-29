@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using VuforiaWebService.Api.Auth;
+﻿using VuforiaWebService.Api.Auth;
 using VuforiaWebService.Api.Core;
 using VuforiaWebService.Api.Target.Services;
 using VuforiaWebService.Api.Target.Types;
@@ -20,8 +19,9 @@ internal class TargetConsoleService
         return initializer;
     }
 
-    public static void ListTargets(ServerAccessKeys serverAccessKeys)
+    public static void ListTargets(string accessKey, string secretKey)
     {
+        var serverAccessKeys = new ServerAccessKeys(accessKey, secretKey);
         var targetService = new TargetService(GetInitializer());
         var result = targetService.TargetList.List(serverAccessKeys).Execute();
 
@@ -31,8 +31,9 @@ internal class TargetConsoleService
         Console.WriteLine($"Targets: {string.Join(", ", result.Results)}");
     }
 
-    public static void GetTarget(ServerAccessKeys serverAccessKeys, string targetId)
+    public static void GetTarget(string accessKey, string secretKey, string targetId)
     {
+        var serverAccessKeys = new ServerAccessKeys(accessKey, secretKey);
         var targetService = new TargetService(GetInitializer());
         var result = targetService.TargetList.Get(serverAccessKeys, targetId).Execute();
         var targetRecord = result.TargetRecord;
@@ -48,9 +49,20 @@ internal class TargetConsoleService
         Console.WriteLine($"Name: {targetRecord.Name}");
     }
 
-    public static void InsertTarget(ServerAccessKeys serverAccessKeys, string jsonString)
+    public static void InsertTarget(string accessKey, string secretKey, string name, float width, string image, bool? activeFlag, string metadata)
     {
-        var body = JsonConvert.DeserializeObject<PostTrackableRequest>(jsonString);
+        var imageBytes = File.ReadAllBytes(image);
+        var imageBase64 = Convert.ToBase64String(imageBytes);
+
+        var body = new PostTrackableRequest()
+        {
+            ActiveFlag = activeFlag,
+            ApplicationMetadata = metadata,
+            Image = imageBase64,
+            Name = name,
+            Width = width
+        };
+        var serverAccessKeys = new ServerAccessKeys(accessKey, secretKey);
         var targetService = new TargetService(GetInitializer());
         var result = targetService.TargetList.Insert(serverAccessKeys, body).Execute();
 
@@ -60,9 +72,20 @@ internal class TargetConsoleService
         Console.WriteLine($"Inserted Target ID: {result.TargetId}");
     }
 
-    public static void UpdateTarget(ServerAccessKeys serverAccessKeys, string jsonString, string targetId)
+    public static void UpdateTarget(string accessKey, string secretKey, string targetId, string name, float? width, string image, bool? activeFlag, string metadata)
     {
-        var body = JsonConvert.DeserializeObject<PostTrackableRequest>(jsonString);
+        var imageBytes = image != null ? File.ReadAllBytes(image) : null;
+        var imageBase64 = imageBytes != null ? Convert.ToBase64String(imageBytes) : null;
+
+        var body = new UpdateTrackableRequest()
+        {
+            ActiveFlag = activeFlag,
+            ApplicationMetadata = metadata,
+            Image = imageBase64,
+            Name = name,
+            Width = width
+        };
+        var serverAccessKeys = new ServerAccessKeys(accessKey, secretKey);
         var targetService = new TargetService(GetInitializer());
         var result = targetService.TargetList.Update(serverAccessKeys, body, targetId).Execute();
 
@@ -71,8 +94,9 @@ internal class TargetConsoleService
         Console.WriteLine($"Result Code: {result.ResultCode}");
     }
 
-    public static void DeleteTarget(ServerAccessKeys serverAccessKeys, string targetId)
+    public static void DeleteTarget(string accessKey, string secretKey, string targetId)
     {
+        var serverAccessKeys = new ServerAccessKeys(accessKey, secretKey);
         var targetService = new TargetService(GetInitializer());
         var result = targetService.TargetList.Delete(serverAccessKeys, targetId).Execute();
 
@@ -81,8 +105,9 @@ internal class TargetConsoleService
         Console.WriteLine($"Result Code: {result.ResultCode}");
     }
 
-    public static void CheckSimilarTargets(ServerAccessKeys serverAccessKeys, string targetId)
+    public static void CheckSimilarTargets(string accessKey, string secretKey, string targetId)
     {
+        var serverAccessKeys = new ServerAccessKeys(accessKey, secretKey);
         var targetService = new TargetService(GetInitializer());
         var result = targetService.TargetList.CheckSimilar(serverAccessKeys, targetId).Execute();
 
@@ -92,8 +117,9 @@ internal class TargetConsoleService
         Console.WriteLine($"Similar Targets: {string.Join(", ", result.SimilarTargets)}");
     }
 
-    public static void RetrieveTargetSummaryReport(ServerAccessKeys serverAccessKeys, string targetId)
+    public static void RetrieveTargetSummaryReport(string accessKey, string secretKey, string targetId)
     {
+        var serverAccessKeys = new ServerAccessKeys(accessKey, secretKey);
         var targetService = new TargetService(GetInitializer());
         var result = targetService.TargetList.RetrieveTargetSummaryReport(serverAccessKeys, targetId).Execute();
 
@@ -112,8 +138,9 @@ internal class TargetConsoleService
         Console.WriteLine($"Tracking Rating: {result.UploadDate}");
     }
 
-    public static void GetDatabaseSummaryReport(ServerAccessKeys serverAccessKeys)
+    public static void GetDatabaseSummaryReport(string accessKey, string secretKey)
     {
+        var serverAccessKeys = new ServerAccessKeys(accessKey, secretKey);
         var targetService = new TargetService(GetInitializer());
         var result = targetService.TargetList.GetDatabaseSummaryReport(serverAccessKeys).Execute();
 

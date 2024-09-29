@@ -1,6 +1,5 @@
 ﻿using System.CommandLine;
 using VuforiaWebService.ConsoleApp;
-using VuforiaWebService.ConsoleApp.Helpers;
 
 // Create reusable global options
 var accessKeyOption = new Option<string>("--access-key", "Your access key") { IsRequired = true };
@@ -12,56 +11,69 @@ var rootCommand = new RootCommand("Vuforia Web Service CLI Tool");
 rootCommand.AddGlobalOption(accessKeyOption);
 rootCommand.AddGlobalOption(secretKeyOption);
 
-var targetIdOption = new Option<string>("--target-id", "ID of the target") { IsRequired = true };
-var targetJsonOption = new Option<string>("--target", "The target in JSON format") { IsRequired = true };
+// Define target options with unique names and correct descriptions
+var targetIdOption = new Option<string>("--target-id", "ID of the target");
+var targetNameOption = new Option<string>("--target-name", "The name of the target");
+var targetNullableWidthOption = new Option<float?>("--target-width", "The width of the target in units");
+var targetWidthOption = new Option<float>("--target-width", "The width of the target in units");
+var targetImageOption = new Option<string>("--target-image", "Path to the image file of the target");
+var targetActiveFlagOption = new Option<bool?>("--target-active-flag", "Indicates if the target is active (true or false)");
+var targetMetadataOption = new Option<string>("--target-metadata", "Additional metadata for the target");
 
 // Command: list
-rootCommand.Add(CommandHelper.CreateActionCommand(
-    "list",
-    TargetConsoleService.ListTargets,
-    accessKeyOption, secretKeyOption));
+var listCommand = new Command("list");
+listCommand.SetHandler(TargetConsoleService.ListTargets, accessKeyOption, secretKeyOption);
+rootCommand.Add(listCommand);
 
 // Command: get
-rootCommand.Add(CommandHelper.CreateActionCommand(
-    "get",
-    TargetConsoleService.GetTarget,
-    targetIdOption, accessKeyOption, secretKeyOption));
+var getCommand = new Command("get");
+getCommand.AddOption(targetIdOption);
+getCommand.SetHandler(TargetConsoleService.GetTarget, accessKeyOption, secretKeyOption, targetIdOption);
+rootCommand.Add(getCommand);
 
 // Command: insert
-rootCommand.Add(CommandHelper.CreateActionCommand(
-    "insert",
-    TargetConsoleService.InsertTarget,
-    targetJsonOption, accessKeyOption, secretKeyOption));
+var insertCommand = new Command("insert");
+insertCommand.AddOption(targetNameOption);
+insertCommand.AddOption(targetWidthOption);
+insertCommand.AddOption(targetImageOption);
+insertCommand.AddOption(targetActiveFlagOption);
+insertCommand.AddOption(targetMetadataOption);
+insertCommand.SetHandler(TargetConsoleService.InsertTarget, accessKeyOption, secretKeyOption, targetNameOption, targetWidthOption, targetImageOption, targetActiveFlagOption, targetMetadataOption);
+rootCommand.Add(insertCommand);
 
 // Command: update
-rootCommand.Add(CommandHelper.CreateActionCommand(
-    "update",
-    TargetConsoleService.UpdateTarget,
-    targetJsonOption, targetIdOption, accessKeyOption, secretKeyOption));
+var updateCommand = new Command("update");
+updateCommand.AddOption(targetIdOption);
+updateCommand.AddOption(targetNameOption);
+updateCommand.AddOption(targetNullableWidthOption);
+updateCommand.AddOption(targetImageOption);
+updateCommand.AddOption(targetActiveFlagOption);
+updateCommand.AddOption(targetMetadataOption);
+updateCommand.SetHandler(TargetConsoleService.UpdateTarget, accessKeyOption, secretKeyOption, targetIdOption, targetNameOption, targetNullableWidthOption, targetImageOption, targetActiveFlagOption, targetMetadataOption);
+rootCommand.Add(updateCommand);
 
 // Command: delete
-rootCommand.Add(CommandHelper.CreateActionCommand(
-    "delete",
-    TargetConsoleService.DeleteTarget,
-    targetIdOption, accessKeyOption, secretKeyOption));
+var deleteCommand = new Command("delete");
+deleteCommand.AddOption(targetIdOption);
+deleteCommand.SetHandler(TargetConsoleService.DeleteTarget, accessKeyOption, secretKeyOption, targetIdOption);
+rootCommand.Add(deleteCommand);
 
 // Command: check-similar
-rootCommand.Add(CommandHelper.CreateActionCommand(
-    "check-similar",
-    TargetConsoleService.CheckSimilarTargets,
-    targetIdOption, accessKeyOption, secretKeyOption));
+var checkSimilarCommand = new Command("check-similar");
+checkSimilarCommand.AddOption(targetIdOption);
+checkSimilarCommand.SetHandler(TargetConsoleService.CheckSimilarTargets, accessKeyOption, secretKeyOption, targetIdOption);
+rootCommand.Add(checkSimilarCommand);
 
 // Command: summary-report
-rootCommand.Add(CommandHelper.CreateActionCommand(
-    "summary-report",
-    TargetConsoleService.RetrieveTargetSummaryReport,
-    targetIdOption, accessKeyOption, secretKeyOption));
+var summaryReportCommand = new Command("summary-report");
+summaryReportCommand.AddOption(targetIdOption);
+summaryReportCommand.SetHandler(TargetConsoleService.RetrieveTargetSummaryReport, accessKeyOption, secretKeyOption, targetIdOption);
+rootCommand.Add(summaryReportCommand);
 
 // Command: database-summary
-rootCommand.Add(CommandHelper.CreateActionCommand(
-    "database-summary",
-    TargetConsoleService.GetDatabaseSummaryReport,
-    accessKeyOption, secretKeyOption));
+var databaseSummary = new Command("database-summary");
+databaseSummary.SetHandler(TargetConsoleService.GetDatabaseSummaryReport, accessKeyOption, secretKeyOption);
+rootCommand.Add(databaseSummary);
 
 // Execute the command line app
 return await rootCommand.InvokeAsync(args);

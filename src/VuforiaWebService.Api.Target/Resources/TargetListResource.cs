@@ -48,7 +48,7 @@ public class TargetListResource
     /// <param name="body">The body of the request containing the updated target information.</param>
     /// <param name="targetId">The ID of the target to update. To retrieve target IDs, call the <see cref="List"/> method.</param>
     /// <returns>A new <see cref="UpdateRequest"/> instance that can update an existing target.</returns>
-    public virtual UpdateRequest Update(ServerAccessKeys keys, PostTrackableRequest body, string targetId) => new UpdateRequest(_service, keys, body, targetId);
+    public virtual UpdateRequest Update(ServerAccessKeys keys, UpdateTrackableRequest body, string targetId) => new UpdateRequest(_service, keys, body, targetId);
 
     /// <summary>
     /// Creates a new <see cref="DeleteRequest"/> instance that can delete an existing target by ID.
@@ -191,7 +191,7 @@ public class TargetListResource
         /// <param name="keys">The database access keys required for authorization.</param>
         /// <param name="body">The body of the request containing the updated target information.</param>
         /// <param name="targetId">The ID of the target to update. To retrieve target IDs, call the <see cref="List"/> method.</param>
-        public UpdateRequest(IClientService service, ServerAccessKeys keys, PostTrackableRequest body, string targetId) : base(service, keys)
+        public UpdateRequest(IClientService service, ServerAccessKeys keys, UpdateTrackableRequest body, string targetId) : base(service, keys)
         {
             TargetId = targetId;
             Body = body;
@@ -206,7 +206,7 @@ public class TargetListResource
         /// <summary>
         /// Gets the body of the request containing the updated target information.
         /// </summary>
-        private PostTrackableRequest Body { get; }
+        private UpdateTrackableRequest Body { get; }
 
         /// <inheritdoc/>
         public override string MethodName => "update";

@@ -28,7 +28,7 @@ public class TargetListTestResource : ITargetListTestResource
         return _service.TargetList.Insert(keys, request).Execute();
     }
 
-    public virtual VuforiaUpdateResponse Update(ServerAccessKeys keys, PostTrackableRequest request, string targetId)
+    public virtual VuforiaUpdateResponse Update(ServerAccessKeys keys, UpdateTrackableRequest request, string targetId)
     {
         return _service.TargetList.Update(keys, request, targetId).Execute();
     }

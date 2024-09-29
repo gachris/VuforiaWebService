@@ -3,9 +3,9 @@
 namespace VuforiaWebService.Api.Target.Types;
 
 /// <summary>
-/// Represents a request to post a trackable object to the Vuforia web service.
+/// Represents a request to update a trackable object to the Vuforia web service.
 /// </summary>
-public class PostTrackableRequest
+public class UpdateTrackableRequest
 {
     /// <summary>
     /// Gets or sets the name of the trackable object.
@@ -17,7 +17,7 @@ public class PostTrackableRequest
     /// Gets or sets the width of the trackable object in scene units.
     /// </summary>
     [JsonProperty("width")]
-    public float Width { get; set; }
+    public float? Width { get; set; }
 
     /// <summary>
     /// Gets or sets the base64-encoded image data of the trackable object.

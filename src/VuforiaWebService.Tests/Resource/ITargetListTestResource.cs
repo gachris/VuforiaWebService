@@ -11,7 +11,7 @@ public interface ITargetListTestResource
 
     VuforiaPostResponse Insert(ServerAccessKeys keys, PostTrackableRequest request);
 
-    VuforiaUpdateResponse Update(ServerAccessKeys keys, PostTrackableRequest request, string targetId);
+    VuforiaUpdateResponse Update(ServerAccessKeys keys, UpdateTrackableRequest request, string targetId);
 
     VuforiaDeleteResponse Delete(ServerAccessKeys keys, string targetId);
 
