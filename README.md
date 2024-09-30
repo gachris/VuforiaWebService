@@ -80,7 +80,7 @@ private static void Main()
         {
             Name = "NewSampleTarget",
             Width = 1,
-            Image = "<path_to_your_image>",
+            Image = "<base_64_image>",
             ActiveFlag = true
         }).Execute();
         Console.WriteLine($"Inserted New Target ID: {newTarget.TargetId}");
